@@ -1,0 +1,25 @@
+.transformer{
+    display: inline-block;
+    padding: 20px;
+    box-shadow: inseta(rgba(17, 12, 46, 0.15), 0px 48px 100px 0px);
+    padding: 20px;
+    width: 20%;
+    margin: 10px;
+}
+
+.transformeroption{
+    cursor: pointer;
+    padding: 10px;
+    box-shadow: inseta(rgba(17, 12, 46, 0.15), 0px 48px 100px 0px);
+    border-radius: 3px;
+    margin: 5px;
+}
+
+.substationoption{
+    list-style: none;
+    padding: 10px;
+    box-shadow: inseta(rgba(17, 12, 46, 0.15), 0px 48px 100px 0px);
+    border-radius: 3px;
+    margin: 5px;
+}
+

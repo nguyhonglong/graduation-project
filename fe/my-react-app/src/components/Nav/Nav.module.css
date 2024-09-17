@@ -1,0 +1,29 @@
+.container{
+    display: inline-block;
+    width: 20%;
+    height: 100%;
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.768) 0px 4px 12px;
+
+    margin: 10px;
+}
+
+.link a{
+    display: block; /* Hiển thị liên kết thành block */
+    color: #333; /* Màu chữ */
+    padding: 15px 20px;
+    text-decoration: none; /* Loại bỏ gạch chân */
+    transition: background-color 0.3s;
+}
+
+.link a:hover{
+    background-color: #ddd;
+}
+
+.link{
+    display: block; /* Hiển thị liên kết thành block */
+    color: #333; /* Màu chữ */
+    padding: 10px 15px;
+    text-decoration: none; /* Loại bỏ gạch chân */
+    transition: background-color 0.3s;
+}
