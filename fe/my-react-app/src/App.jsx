@@ -17,13 +17,22 @@ import {
 } from "react-router-dom";
 
 function App() {
+  const [currentTransformer, setCurrentTransformer] = useState(null);
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </Router>
+    <div>
+
+      <Router>
+        <Header />
+        <Nav />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/bieu-do" element={<Chart />} />
+          <Route path="/bang" element={<Table />} />
+          
+        </Routes>
+      </Router>
+    </div>
+
 
   )
 }

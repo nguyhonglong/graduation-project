@@ -7,9 +7,15 @@ function Transformer({ setCurrentTransformer }) {
     const [transformers, setTransformers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const token = localStorage.getItem('token'); // hoặc sessionStorage.getItem('token')
+
 
     useEffect(() => {
-        axios.get('http://localhost:3000/v1/transformers')
+        axios.get('http://localhost:3000/v1/transformers',{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
             .then(response => {
                 setTransformers(response.data);
             })
@@ -18,7 +24,11 @@ function Transformer({ setCurrentTransformer }) {
                 setLoading(false);
             });
 
-        axios.get('http://localhost:3000/v1/substations')
+        axios.get('http://localhost:3000/v1/substations',{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
             .then(response => {
                 setSubstations(response.data);
                 setLoading(false);

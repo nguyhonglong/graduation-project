@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react"
 import axios from "axios";
 import style from './Chart.module.css'
+import Transformer from '../../Transformer/Transformer'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-function Chart({ currentTransformer }) {
+function Chart() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const today = new Date();
     const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
     const [startDate, setStartDate] = useState(currentMonthStart.toISOString().split('T')[0]);
     const [endDate, setEndDate] = useState(today.toISOString().split('T')[0]);
+    const [currentTransformer, setCurrentTransformer] = useState(null);
     const [activeLines, setActiveLines] = useState({
         Hydrogen: true,
         Methane: true,
@@ -39,7 +41,11 @@ function Chart({ currentTransformer }) {
     }, [currentTransformer, startDate, endDate]);
 
     if (!currentTransformer) {
-        return <p>Chọn một trạm...</p>;
+        return(<div>
+            <p>Chọn một trạm...</p>;
+            <Transformer setCurrentTransformer={setCurrentTransformer} />
+        </div>)
+        
     }
 
     if (loading) {
@@ -49,7 +55,7 @@ function Chart({ currentTransformer }) {
     }
     return (
         <div >
-            
+
             <h3>{currentTransformer.name}</h3>
             <div className={style.choosedate}>
                 <label className={style}>
@@ -99,8 +105,12 @@ function Chart({ currentTransformer }) {
                             {activeLines.Water && <Line type="monotone" dataKey="Water" stroke="#0000ff" />}
                         </LineChart>
                     </ResponsiveContainer>
+
                 </div>
+                <Transformer setCurrentTransformer={setCurrentTransformer} />
+
             </div>
+
         </div>
     )
 }

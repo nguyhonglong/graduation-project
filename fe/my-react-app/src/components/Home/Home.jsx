@@ -17,7 +17,7 @@ export default function Home() {
     const [currentTransformer, setCurrentTransformer] = useState(null);
     return (
         <div>
-            <Header />
+            
             <Nav />
             <Routes>
                 <Route path="/bieu-do" element={<Chart currentTransformer={currentTransformer} />} />

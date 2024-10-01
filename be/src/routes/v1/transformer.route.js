@@ -8,5 +8,5 @@ const router = express.Router();
 router
   .route('/')
   .post(auth("createTransformer"), validate(transformerValidation.createTransformer), transformerController.createTransformer)
-  .get( transformerController.getTransformer);
+  .get(auth("getTransformers"), validate(transformerValidation.getTransformers), transformerController.getTransformer);
 module.exports = router;

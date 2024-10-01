@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react"
 import axios from "axios";
 import style from './Table.module.css'
+import Transformer from '../../Transformer/Transformer'
 
-function Table({ currentTransformer }) {
+function Table() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const today = new Date();
     const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
     const [startDate, setStartDate] = useState(currentMonthStart.toISOString().split('T')[0]);
     const [endDate, setEndDate] = useState(today.toISOString().split('T')[0]);
-    console.log(currentTransformer)
+    const [currentTransformer, setCurrentTransformer] = useState(null);
+    
     useEffect(() => {
         if (currentTransformer) {
             setLoading(true)
@@ -26,7 +28,11 @@ function Table({ currentTransformer }) {
     }, [currentTransformer, startDate, endDate]);
 
     if (!currentTransformer) {
-        return <p>Chọn một trạm...</p>;
+        return (
+        <div><p>Chọn một trạm...</p>
+            <Transformer setCurrentTransformer={setCurrentTransformer} />
+        </div>
+        )
     }
 
     if (loading) {
@@ -50,37 +56,38 @@ function Table({ currentTransformer }) {
                 </label>
             </div>
             <div >
-                    <table className={style}>
-                        <tr>
-                            <th>Acetylene</th>
-                            <th>CO</th>
-                            <th>CO2</th>
-                            <th>Ethane</th>
-                            <th>Ethylene</th>
-                            <th>Hydrogen</th>
-                            <th>Methane</th>
-                            <th>O2</th>
-                            <th>TDCG</th>
-                            <th>Water</th>
-                            <th>Ngày</th>
+                <table className={style}>
+                    <tr>
+                        <th>Acetylene</th>
+                        <th>CO</th>
+                        <th>CO2</th>
+                        <th>Ethane</th>
+                        <th>Ethylene</th>
+                        <th>Hydrogen</th>
+                        <th>Methane</th>
+                        <th>O2</th>
+                        <th>TDCG</th>
+                        <th>Water</th>
+                        <th>Ngày</th>
+                    </tr>
+                    {data.map((data) => (
+                        <tr key={data.id}>
+                            <td>{data.Acetylene}</td>
+                            <td>{data.CO}</td>
+                            <td>{data.CO2}</td>
+                            <td>{data.Ethane}</td>
+                            <td>{data.Ethylene}</td>
+                            <td>{data.Hydrogen}</td>
+                            <td>{data.Methane}</td>
+                            <td>{data.O2}</td>
+                            <td>{data.TDCG}</td>
+                            <td>{data.Water}</td>
+                            <td>{data.createdAt.split('T')[0]}</td>
                         </tr>
-                        {data.map((data) => (
-                            <tr key={data.id}>
-                                <td>{data.Acetylene}</td>
-                                <td>{data.CO}</td>
-                                <td>{data.CO2}</td>
-                                <td>{data.Ethane}</td>
-                                <td>{data.Ethylene}</td>
-                                <td>{data.Hydrogen}</td>
-                                <td>{data.Methane}</td>
-                                <td>{data.O2}</td>
-                                <td>{data.TDCG}</td>
-                                <td>{data.Water}</td>
-                                <td>{data.createdAt.split('T')[0]}</td>
-                            </tr>
-                        ))}
-                    </table>
+                    ))}
+                </table>
             </div>
+            <Transformer setCurrentTransformer={setCurrentTransformer} />
         </div>
     )
 }

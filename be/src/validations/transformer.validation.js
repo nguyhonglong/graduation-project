@@ -16,6 +16,14 @@ const createTransformer = {
     }),
 };
 
+const getTransformers = {
+    query: Joi.object().keys({
+      name: Joi.string(),
+      role: Joi.string(),
+      sortBy: Joi.string()
+    }),
+  };
+
 module.exports = {
-    createTransformer,
+    createTransformer, getTransformers
 };
