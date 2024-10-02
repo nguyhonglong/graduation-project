@@ -11,7 +11,7 @@ function Table() {
     const [startDate, setStartDate] = useState(currentMonthStart.toISOString().split('T')[0]);
     const [endDate, setEndDate] = useState(today.toISOString().split('T')[0]);
     const [currentTransformer, setCurrentTransformer] = useState(null);
-    
+
     useEffect(() => {
         if (currentTransformer) {
             setLoading(true)
@@ -29,63 +29,73 @@ function Table() {
 
     if (!currentTransformer) {
         return (
-        <div><p>Chọn một trạm...</p>
-            <Transformer setCurrentTransformer={setCurrentTransformer} />
-        </div>
+            <div className={style.contentcontainer}>
+                <div className={style.tablecontainer}>
+                    <p>Chọn một trạm...</p>
+                </div>
+
+                <Transformer setCurrentTransformer={setCurrentTransformer} />
+            </div>
         )
     }
 
     if (loading) {
-        return <div >
-            Đang tải dữ liệu bảng...
+        return <div className={style.contentcontainer}>
+            <div className={style.tablecontainer}>
+                <p>Đang tải dữ liệu...</p>
+            </div>
+
+            <Transformer setCurrentTransformer={setCurrentTransformer} />
         </div>
     }
 
     console.log(data)
     return (
-        <div className={style.tablecontainer}>
-            <h1>{currentTransformer.name}</h1>
-            <div className={style.choosedate}>
-                <label className={style}>
-                    Start Date:
-                    <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-                </label>
-                <label className={style}>
-                    End Date:
-                    <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                </label>
-            </div>
-            <div >
-                <table className={style}>
-                    <tr>
-                        <th>Acetylene</th>
-                        <th>CO</th>
-                        <th>CO2</th>
-                        <th>Ethane</th>
-                        <th>Ethylene</th>
-                        <th>Hydrogen</th>
-                        <th>Methane</th>
-                        <th>O2</th>
-                        <th>TDCG</th>
-                        <th>Water</th>
-                        <th>Ngày</th>
-                    </tr>
-                    {data.map((data) => (
-                        <tr key={data.id}>
-                            <td>{data.Acetylene}</td>
-                            <td>{data.CO}</td>
-                            <td>{data.CO2}</td>
-                            <td>{data.Ethane}</td>
-                            <td>{data.Ethylene}</td>
-                            <td>{data.Hydrogen}</td>
-                            <td>{data.Methane}</td>
-                            <td>{data.O2}</td>
-                            <td>{data.TDCG}</td>
-                            <td>{data.Water}</td>
-                            <td>{data.createdAt.split('T')[0]}</td>
+        <div className={style.contentcontainer}>
+            <div className={style.tablecontainer}>
+                <h1>{currentTransformer.name}</h1>
+                <div className={style.choosedate}>
+                    <label className={style}>
+                        Ngày bắt đầu:
+                        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                    </label>
+                    <label className={style}>
+                        Ngày kết thúc:
+                        <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                    </label>
+                </div>
+                <div >
+                    <table className={style}>
+                        <tr>
+                            <th>Acetylene</th>
+                            <th>CO</th>
+                            <th>CO2</th>
+                            <th>Ethane</th>
+                            <th>Ethylene</th>
+                            <th>Hydrogen</th>
+                            <th>Methane</th>
+                            <th>O2</th>
+                            <th>TDCG</th>
+                            <th>Water</th>
+                            <th>Ngày</th>
                         </tr>
-                    ))}
-                </table>
+                        {data.map((data) => (
+                            <tr key={data.id}>
+                                <td>{data.Acetylene}</td>
+                                <td>{data.CO}</td>
+                                <td>{data.CO2}</td>
+                                <td>{data.Ethane}</td>
+                                <td>{data.Ethylene}</td>
+                                <td>{data.Hydrogen}</td>
+                                <td>{data.Methane}</td>
+                                <td>{data.O2}</td>
+                                <td>{data.TDCG}</td>
+                                <td>{data.Water}</td>
+                                <td>{data.createdAt.split('T')[0]}</td>
+                            </tr>
+                        ))}
+                    </table>
+                </div>
             </div>
             <Transformer setCurrentTransformer={setCurrentTransformer} />
         </div>

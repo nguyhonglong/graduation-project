@@ -3,9 +3,23 @@ table {
     border-collapse: collapse; 
 }
 .tablecontainer{
-    height: 100%;
-    overflow-y: scroll;
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.768) 0px 4px 12px;
+    margin: 10px;
+    border-radius: 3px;
+    width: 60vw;
+    height: calc(100vh - 130px);
+    overflow: hidden;
 }
+.contentcontainer{
+    display: flex;  
+}
+
+table{
+    overflow-y: scroll;
+    height: calc(100vh - 130px);
+}
+
 th,
 td {
     padding: 15px;

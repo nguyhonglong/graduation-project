@@ -23,13 +23,15 @@ function App() {
 
       <Router>
         <Header />
-        <Nav />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/bieu-do" element={<Chart />} />
-          <Route path="/bang" element={<Table />} />
-          
-        </Routes>
+        <div className={style.display}>
+          <Nav />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/bieu-do" element={<Chart />} />
+            <Route path="/bang" element={<Table />} />
+          </Routes>
+        </div>
+
       </Router>
     </div>
 

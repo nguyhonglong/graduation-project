@@ -7,7 +7,6 @@
     margin: 10px;
 }
 
-.container{
+.display{
     display: flex;
-    height: 80vh;
 }

@@ -5,3 +5,24 @@ label {
 .choosedate{
     padding: 20px;
 }
+
+.contentcontainer{
+    display: flex;  
+}
+
+
+.chartcontainer{
+    width: 60vw;
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 12px;
+    margin: 10px;
+    border-radius: 3px;
+}
+
+.checkboxes{
+    padding: 30px;
+}
+
+.transformername{
+    padding: 20px;
+}

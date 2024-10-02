@@ -7,8 +7,7 @@ function Transformer({ setCurrentTransformer }) {
     const [transformers, setTransformers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const token = localStorage.getItem('token'); // hoặc sessionStorage.getItem('token')
-
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         axios.get('http://localhost:3000/v1/transformers',{
