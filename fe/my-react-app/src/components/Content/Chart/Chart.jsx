@@ -62,14 +62,14 @@ function Chart() {
     return (
         <div className={style.contentcontainer} >
             <div className={style.chartcontainer}>
-                <h3 className={style.transformername} >{currentTransformer.name}</h3>
+                <h1 className={style.transformername} >{currentTransformer.name}</h1>
                 <div className={style.choosedate}>
                     <label className={style}>
-                        Ngày bắt đầu:
+                        Ngày bắt đầu:&nbsp;
                         <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
                     </label>
                     <label className={style}>
-                        Ngày kết thúc:
+                        Ngày kết thúc:&nbsp;
                         <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
                     </label>
                 </div>

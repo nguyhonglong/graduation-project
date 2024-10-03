@@ -1,29 +1,101 @@
-.transformer{
-    display: inline-block;
+/* Transformer.module.css */
+
+/* Tree View Styles */
+.transformer {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border-radius: 3px;
     padding: 20px;
-    box-shadow: inseta(rgba(17, 12, 46, 0.15), 0px 48px 100px 0px);
-    padding: 20px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 12px;
     width: 20vw;
     margin: 10px;
-    padding: 10px;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 12px;
-    margin: 10px;
-    border-radius: 3px;
+    font-family: Arial, sans-serif;
+    color: #333;
 }
 
-.transformeroption{
+/* Substation styles */
+.substationoption {
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    margin: 10px 0;
+    border-radius: 5px;
     cursor: pointer;
-    padding: 10px;
-    box-shadow: inseta(rgba(17, 12, 46, 0.15), 0px 48px 100px 0px);
-    border-radius: 3px;
-    margin: 5px;
+    transition: background-color 0.3s ease;
+    position: relative;
 }
 
-.substationoption{
-    list-style: none;
+/* Highlight the selected substation */
+.substationoption.selected {
+    background-color: #45a049;
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Transformer nested within a substation */
+.substationoption + .transformerlist {
+    padding-left: 20px; /* Indent for tree view */
+    margin-top: 5px;
+    border-left: 2px solid #ddd; /* Line indicating nested items */
+}
+
+/* Transformer styles */
+.transformeroption {
+    font-size: 16px;
+    padding: 8px 16px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    margin: 5px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: 1px solid #ddd;
+}
+
+/* Highlight on hover */
+.transformeroption:hover {
+    background-color: #ddd;
+}
+
+/* Indicate active transformer */
+.transformeroption.selected {
+    background-color: #bbb;
+    border-color: #999;
+}
+
+/* Show active transformer with border */
+.substationoption.selected + .transformerlist .transformeroption {
+    background-color: #eef;
+}
+
+.transformeroption + .transformeroption {
+    margin-top: 5px;
+}
+
+p {
+    font-size: 16px;
+    color: #e74c3c;
+}
+
+/* Loading state */
+.loading {
+    font-size: 20px;
+    color: #333;
+    text-align: center;
+}
+.searchInput {
+    width: 100%;
     padding: 10px;
-    box-shadow: inseta(rgba(17, 12, 46, 0.15), 0px 48px 100px 0px);
-    border-radius: 3px;
-    margin: 5px;
+    margin-bottom: 15px; /* Khoảng cách giữa ô tìm kiếm và danh sách */
+    border: 1px solid #ccc; /* Đường viền */
+    border-radius: 5px; /* Bo góc */
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px; /* Đổ bóng nhẹ */
+    font-size: 16px; /* Kích thước chữ */
+}
+
+.searchInput:focus {
+    outline: none; /* Loại bỏ viền khi ô input được chọn */
+    border-color: #007bff; /* Đổi màu viền khi focus */
 }
 

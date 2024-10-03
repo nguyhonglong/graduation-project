@@ -7,7 +7,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .get( substationController.getSubstations);
+  .get( substationController.getSubstations)
+  .post(substationController.createSubstation)
   
 
 module.exports = router;

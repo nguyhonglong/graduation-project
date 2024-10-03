@@ -4,6 +4,7 @@ import Header from './components/Header/Header'
 import Nav from './components/Nav/Nav'
 import Chart from './components/Content/Chart/Chart'
 import Table from './components/Content/Table/Table'
+import TransformerDetails from './components/Content/Transformer/TransformerDetails'
 import Transformer from './components/Transformer/Transformer'
 import Login from './components/Login/Login'
 import Home from './components/Home/Home'
@@ -29,6 +30,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/bieu-do" element={<Chart />} />
             <Route path="/bang" element={<Table />} />
+            <Route path="/tram-bien-ap" element={<Transformer />} />
           </Routes>
         </div>
 

@@ -4,7 +4,7 @@ const { substationService } = require('../services');
 
 
 const createSubstation = catchAsync(async (req, res) => {
-    const substation = await substationServiceService.createSubstation(req.body);
+    const substation = await substationService.createSubstation(req.body);
     res.status(httpStatus.CREATED).send(substation);
 });
 

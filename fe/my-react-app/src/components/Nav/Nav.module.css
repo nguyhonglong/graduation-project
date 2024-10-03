@@ -1,29 +1,87 @@
-.container{
-    display: inline-block;
+/* Container của nav, với chiều dọc chiếm 20% chiều rộng màn hình */
+.container {
+    display: flex;
+    flex-direction: column; /* Xếp các phần tử theo chiều dọc */
+    justify-content: space-between; /* Đặt khoảng cách đều giữa các phần tử */
     width: 20vw;
     height: calc(100vh - 130px);
-    padding: 10px;
+    padding: 20px;
     box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 12px;
     margin: 10px;
     border-radius: 3px;
+    /* background-color: #f8f8f8; */
+
+    /* display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+    color: #333; */
 }
 
-.link a{
-    display: block; /* Hiển thị liên kết thành block */
-    color: #333; /* Màu chữ */
+/* Định dạng ul để xếp các mục liên kết theo chiều dọc */
+.linkul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1; /* Để danh sách các liên kết chiếm khoảng trống giữa */
+}
+
+/* Định dạng các liên kết bên trong nav theo block để hiện thị dọc */
+.link a {
+    display: block;
+    color: #333;
     padding: 15px 20px;
-    text-decoration: none; /* Loại bỏ gạch chân */
+    text-decoration: none;
+    border-radius: 3px;
     transition: background-color 0.3s;
+    font-weight: bold;
 }
 
-.link a:hover{
+/* Khi người dùng hover vào mục */
+.link a:hover {
     background-color: #ddd;
+    border-radius: 3px;
 }
 
-.link{
-    display: block; /* Hiển thị liên kết thành block */
-    color: #333; /* Màu chữ */
-    padding: 10px 15px;
-    text-decoration: none; /* Loại bỏ gạch chân */
-    transition: background-color 0.3s;
+/* Định dạng li (các mục liên kết) */
+.link {
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Khi mục được chọn (active) */
+.active {
+    background-color: #abd4de; /* Màu đỏ EVN cho mục đang chọn */
+    color: white;
+    border-radius: 2px;
+}
+
+/* Định dạng khi di chuột lên mục được chọn */
+.active:hover {
+    background-color: #abd4de; /* Màu đỏ đậm hơn khi hover */
+    border-radius: 3px;
+}
+
+/* Định dạng cho nút Logout */
+button {
+    width: 100%;
+    background-color: #e30613;
+    color: white;
+    font-weight: bold;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+    align-self: flex-end; /* Đặt nút logout xuống cuối container */
+}
+
+button:hover {
+    background-color: #b5050f;
 }
