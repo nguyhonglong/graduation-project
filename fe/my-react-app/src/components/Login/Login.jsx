@@ -47,7 +47,7 @@ const Login = () => {
         placeholder="Password"
         required
       />
-      <button type="submit">Login</button>
+      <button type="submit">Đăng nhập</button>
     </form>
   );
 };

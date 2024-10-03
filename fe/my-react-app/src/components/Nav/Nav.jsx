@@ -40,7 +40,7 @@ function Nav() {
                         <button onClick={() => {
                             localStorage.removeItem('token');
                             navigate('/login');
-                        }}>Logout</button>
+                        }}>Đăng xuất</button>
                     </ul>
                 </nav>
             </div>

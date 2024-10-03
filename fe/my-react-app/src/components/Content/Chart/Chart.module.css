@@ -8,6 +8,7 @@ label {
 
 .contentcontainer{
     display: flex;  
+    height: calc(100vh - 110px);
 }
 
 
@@ -17,7 +18,6 @@ label {
     box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 12px;
     margin: 10px;
     border-radius: 3px;
-    width: 60vw;
 }
 
 .checkboxes{
