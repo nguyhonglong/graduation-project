@@ -33,8 +33,6 @@ function Table() {
                 <div className={style.tablecontainer}>
                     <p>Chọn một trạm...</p>
                 </div>
-
-                <Transformer setCurrentTransformer={setCurrentTransformer} />
             </div>
         )
     }
@@ -44,8 +42,6 @@ function Table() {
             <div className={style.tablecontainer}>
                 <p>Đang tải dữ liệu...</p>
             </div>
-
-            <Transformer setCurrentTransformer={setCurrentTransformer} />
         </div>
     }
 
@@ -97,7 +93,7 @@ function Table() {
                     </table>
                 </div>
             </div>
-            <Transformer setCurrentTransformer={setCurrentTransformer} />
+            
         </div>
     )
 }

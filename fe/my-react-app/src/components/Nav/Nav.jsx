@@ -1,50 +1,30 @@
-import { BrowserRouter as Router, Link, useLocation } from 'react-router-dom';
-import style from './Nav.module.css'
-import { useNavigate } from 'react-router-dom';
-import authService from '../../services/authServices';
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../AuthContext';
+import style from './Nav.module.css';
 
 function Nav() {
-    const navigate = useNavigate();
-    const location = useLocation();
+    const { user, logout } = useAuth();
 
-    React.useEffect(() => {
-        if (!authService.isLoggedIn()) {
-            navigate('/login');
-        }
-    }, [navigate]);
+    const handleLogout = () => {
+        logout();
+    };
 
     return (
-        <div className={style.container}>
-            <div>
-                <nav>
-                    <ul className={style.linkul}>
-                        <li className={`${style.link} ${location.pathname === '/' ? style.active : ''}`}>
-                            <Link to="/">Tổng quan</Link>
-                        </li>
-                        <li className={`${style.link} ${location.pathname === '/bieu-do' ? style.active : ''}`}>
-                            <Link to="/bieu-do">Biểu đồ</Link>
-                        </li>
-                        <li className={`${style.link} ${location.pathname === '/bang' ? style.active : ''}`}>
-                            <Link to="/bang">Bảng</Link>
-                        </li>
-                        <li className={`${style.link} ${location.pathname === '/dga' ? style.active : ''}`}>
-                            <Link to="/dga">DGA</Link>
-                        </li>
-                        <li className={`${style.link} ${location.pathname === '/tram-bien-ap' ? style.active : ''}`}>
-                            <Link to="/tram-bien-ap">Trạm biến áp</Link>
-                        </li>
-                        <li className={`${style.link} ${location.pathname === '/bao-cao' ? style.active : ''}`}>
-                            <Link to="/bao-cao">Báo cáo</Link>
-                        </li>
-                        <button onClick={() => {
-                            localStorage.removeItem('token');
-                            navigate('/login');
-                        }}>Đăng xuất</button>
-                    </ul>
-                </nav>
-            </div>
-        </div>
+        <nav className={style.container}>
+            <ul className={style.linkul}>
+                <li className={style.link}><Link to="/bieu-do">Biểu đồ</Link></li>
+                <li className={style.link}><Link to="/bang">Bảng</Link></li>
+                <li className={style.link}><Link to="/tram-bien-ap">Trạm biến áp</Link></li>
+                {user && user.role === 'admin' && (
+                    <>
+                        <li className={style.link}><Link to="/user-management">Quản lý người dùng</Link></li>
+                        <li className={style.link}><Link to="/settings">Cài đặt</Link></li>
+                    </>
+                )}
+            </ul>
+            <button className={style.logoutButton} onClick={handleLogout}>Đăng xuất</button>
+        </nav>
     );
 }
 

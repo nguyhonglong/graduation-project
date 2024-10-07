@@ -10,3 +10,34 @@
 .display{
     display: flex;
 }
+
+.appContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainContent {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 130px); /* Adjust this value based on your header height */
+}
+
+.pageContent {
+  flex: 1;
+  /* overflow-y: auto; */
+  overflow: hidden;
+  padding: 20px;
+  border: 3px solid #ddd;
+  height: calc(100vh - 130px);
+}
+
+/* Styles for the login page */
+.loginPage {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ... other styles ... */

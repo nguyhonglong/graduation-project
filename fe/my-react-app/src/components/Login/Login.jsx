@@ -1,54 +1,60 @@
-// src/components/Login.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useAuth } from '../../AuthContext';
 import { useNavigate } from 'react-router-dom';
+import style from './Login.module.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // Thêm state cho lỗi
+  const [errorMessage, setErrorMessage] = useState('');
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Ngăn chặn hành vi mặc định của form (tải lại trang)
-    
-    setErrorMessage(''); // Reset lại thông báo lỗi khi người dùng gửi form
+    e.preventDefault();
+    setErrorMessage('');
 
     try {
-      const response = await axios.post('http://localhost:3000/v1/auth/login', { email, password });
-      console.log('User logged in:', response.data);
-      localStorage.setItem('token', response.data.tokens.access.token);
+      await login(email, password);
       navigate('/');
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        setErrorMessage('Unauthorized! Please check your email or password.');
-      } else {
-        setErrorMessage('There was an error logging in the user!');
-      }
+      setErrorMessage(error.response?.data?.message || 'An error occurred during login.');
       console.error('Error logging in:', error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>} {/* Hiển thị thông báo lỗi */}
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        required
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        required
-      />
-      <button type="submit">Đăng nhập</button>
-    </form>
+    <div className={style.loginContainer}>
+      <div className={style.loginBox}>
+        <h2 className={style.loginTitle}>Welcome Back</h2>
+        <form onSubmit={handleSubmit} className={style.loginForm}>
+          {errorMessage && <p className={style.errorMessage}>{errorMessage}</p>}
+          <div className={style.inputGroup}>
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div className={style.inputGroup}>
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <button type="submit" className={style.loginButton}>Log In</button>
+        </form>
+      </div>
+    </div>
   );
 };
 

@@ -1,25 +1,20 @@
 import { useState, useEffect } from 'react';
 import style from './Transformer.module.css';
 import axios from 'axios';
-import TransformerDetails from '../Content/Transformer/TransformerDetails'; 
+import { useAuth } from '../../AuthContext';
 
-function Transformer({ setCurrentTransformer }) {
+function Transformer({ setCurrentTransformer, currentTransformer }) {
     const [substations, setSubstations] = useState([]);
     const [transformers, setTransformers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedSubstation, setSelectedSubstation] = useState(null);
-    const [selectedTransformer, setSelectedTransformer] = useState(null);
     const [collapsedSubstations, setCollapsedSubstations] = useState({});
-    const [searchTerm, setSearchTerm] = useState(''); // Từ khóa tìm kiếm
-    const token = localStorage.getItem('token');
+    const [searchTerm, setSearchTerm] = useState('');
+    const { axiosInstance } = useAuth();
 
     useEffect(() => {
-        axios.get('http://localhost:3000/v1/transformers', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        axiosInstance.get('/transformers')
             .then(response => {
                 setTransformers(response.data);
             })
@@ -28,11 +23,7 @@ function Transformer({ setCurrentTransformer }) {
                 setLoading(false);
             });
 
-        axios.get('http://localhost:3000/v1/substations', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        axiosInstance.get('/substations')
             .then(response => {
                 setSubstations(response.data);
                 setLoading(false);
@@ -53,7 +44,6 @@ function Transformer({ setCurrentTransformer }) {
     }
 
     const handleSetCurrentTransformer = (transformer) => {
-        setSelectedTransformer(transformer._id);
         setCurrentTransformer(transformer);
     };
 
@@ -65,8 +55,6 @@ function Transformer({ setCurrentTransformer }) {
         setSelectedSubstation(substationId);
     };
 
-
-    // Lọc substations và transformers dựa trên searchTerm
     const filteredSubstations = substations.filter((substation) => 
         substation.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -77,8 +65,6 @@ function Transformer({ setCurrentTransformer }) {
 
     return (
         <div className={style.transformer}>
-            {/* Ô tìm kiếm */}
-            
             <input 
                 type="text" 
                 placeholder="Tìm kiếm trạm biến áp..." 
@@ -102,7 +88,7 @@ function Transformer({ setCurrentTransformer }) {
                                 transformer.substation === substation._id ? (
                                     <div
                                         key={transformer._id}
-                                        className={`${style.transformeroption} ${selectedTransformer === transformer._id ? style.selected : ''}`}
+                                        className={`${style.transformeroption} ${currentTransformer?._id === transformer._id ? style.selected : ''}`}
                                         onClick={() => handleSetCurrentTransformer(transformer)}
                                     >
                                         {transformer.name}
@@ -113,7 +99,6 @@ function Transformer({ setCurrentTransformer }) {
                     )}
                 </div>
             ))}
-            
         </div>
     );
 }

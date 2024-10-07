@@ -12,13 +12,15 @@
     margin: 10px;
     font-family: Arial, sans-serif;
     color: #333;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 /* Substation styles */
 .substationoption {
     font-size: 18px;
     font-weight: bold;
-    background-color: #4CAF50;
+    background-color: #85b9cc;
     color: white;
     padding: 12px 20px;
     margin: 10px 0;
@@ -26,19 +28,40 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.substationoption::before {
+    content: '▶';
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
+.substationoption.selected::before {
+    transform: rotate(90deg);
 }
 
 /* Highlight the selected substation */
 .substationoption.selected {
-    background-color: #45a049;
+    background-color: #85b9cc;
     box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Transformer nested within a substation */
 .substationoption + .transformerlist {
-    padding-left: 20px; /* Indent for tree view */
-    margin-top: 5px;
-    border-left: 2px solid #ddd; /* Line indicating nested items */
+    padding-left: 30px; /* Indent for tree view */
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-left: 2px solid #85b9cc; /* Line indicating nested items */
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+}
+
+.substationoption.selected + .transformerlist {
+    max-height: 1000px; /* Adjust this value based on your needs */
+    transition: max-height 0.5s ease-in;
 }
 
 /* Transformer styles */
@@ -51,6 +74,33 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     border: 1px solid #ddd;
+    position: relative;
+    padding-left: 25px;
+}
+
+.transformeroption::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 15px;
+    height: 1px;
+    background-color: #85b9cc;
+}
+
+.transformeroption::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 50%;
+    width: 1px;
+    background-color: #85b9cc;
+}
+
+.transformeroption:last-child::after {
+    bottom: auto;
+    height: 50%;
 }
 
 /* Highlight on hover */

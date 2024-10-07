@@ -3,27 +3,64 @@ label {
 }
 
 .choosedate{
-    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-.contentcontainer{
+/* .contentcontainer{
     display: flex;  
     height: calc(100vh - 110px);
-}
+    border: 3px solid #ddd;
+} */
 
 
-.chartcontainer{
-    width: 60vw;
-    padding: 30px;
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 12px;
+.chartContainer {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 75vw;
     margin: 10px;
-    border-radius: 3px;
+    font-family: Arial, sans-serif;
+    height: calc(100vh - 110px);
+    
 }
 
 .checkboxes{
-    padding: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .transformername{
-    padding: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.chartContent {
+    height: 400px;
+    margin-bottom: 20px;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+}
+
+.checkboxInput {
+    margin-right: 5px;
+}
+
+.loadingMessage, .selectMessage {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-top: 20px;
 }
