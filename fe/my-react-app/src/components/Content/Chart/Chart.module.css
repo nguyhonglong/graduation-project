@@ -22,11 +22,10 @@ label {
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 75vw;
+    width: 60vw;
     margin: 10px;
     font-family: Arial, sans-serif;
-    height: calc(100vh - 110px);
-    
+    height: calc(100vh - 130px);
 }
 
 .checkboxes{
@@ -43,8 +42,8 @@ label {
 }
 
 .chartContent {
-    height: 400px;
-    margin-bottom: 20px;
+    flex-grow: 1;
+    min-height: 0;
 }
 
 .checkboxLabel {

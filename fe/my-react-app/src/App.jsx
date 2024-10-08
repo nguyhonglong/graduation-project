@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import Header from './components/Header/Header';
 import Nav from './components/Nav/Nav';
@@ -32,10 +32,13 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 function App() {
   const { isAuthenticated, logout } = useAuth();
   const [currentTransformer, setCurrentTransformer] = React.useState(null);
+  const location = useLocation();
 
   const handleSetCurrentTransformer = (transformer) => {
     setCurrentTransformer(transformer);
   };
+
+  const showTransformer = ['/bieu-do', '/bang', '/tram-bien-ap'].includes(location.pathname);
 
   return (
     <div>
@@ -73,7 +76,7 @@ function App() {
               } />
             </Routes>
           </div>
-          {isAuthenticated && (
+          {isAuthenticated && showTransformer && (
             <Transformer
               setCurrentTransformer={handleSetCurrentTransformer}
               currentTransformer={currentTransformer}
