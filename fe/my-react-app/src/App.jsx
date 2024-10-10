@@ -9,6 +9,7 @@ import Table from './components/Content/Table/Table';
 import UserManagerment from './components/UserManagerment/UserManagerment';
 import Settings from './components/Settings/Settings';
 import Transformer from './components/Transformer/Transformer';
+import TransformerInfo from './components/Content/TransformerInfo/TransformerInfo';
 import style from './App.module.css';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
@@ -38,7 +39,7 @@ function App() {
     setCurrentTransformer(transformer);
   };
 
-  const showTransformer = ['/bieu-do', '/bang', '/tram-bien-ap'].includes(location.pathname);
+  const showTransformer = ['/bieu-do', '/bang', '/tram-bien-ap','/dga'].includes(location.pathname);
 
   return (
     <div>
@@ -47,6 +48,7 @@ function App() {
         <div className={style.mainContent}>
           {isAuthenticated && <Nav onLogout={logout} />}
           <div className={style.pageContent}>
+            <TransformerInfo currentTransformer={currentTransformer} />
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/" element={
@@ -64,12 +66,17 @@ function App() {
                   <Table currentTransformer={currentTransformer} />
                 </ProtectedRoute>
               } />
-              <Route path="/user-management" element={
+              <Route path="/tram-bien-ap" element={
+                <ProtectedRoute>
+                  <TransformerInfo currentTransformer={currentTransformer} />
+                </ProtectedRoute>
+              } />
+              <Route path="/quan-ly-nguoi-dung" element={
                 <ProtectedRoute requiredRole="admin">
                   <UserManagerment />
                 </ProtectedRoute>
               } />
-              <Route path="/settings" element={
+              <Route path="/cai-dat" element={
                 <ProtectedRoute requiredRole="admin">
                   <Settings />
                 </ProtectedRoute>

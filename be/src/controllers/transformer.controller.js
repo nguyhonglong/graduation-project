@@ -13,8 +13,13 @@ const getTransformer = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const getTransformerById = catchAsync(async (req, res) => {
+  const transformer = await transformerService.queryTransformerById(req.params.transformerId);
+  res.send(transformer);
+});
 
 module.exports = {
   getTransformer,
-  createTransformer
+  createTransformer,
+  getTransformerById
 };

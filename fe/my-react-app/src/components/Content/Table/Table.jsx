@@ -3,26 +3,25 @@ import axios from "axios";
 import style from './Table.module.css'
 import Transformer from '../../Transformer/Transformer'
 
-function Table() {
+function Table({ currentTransformer }) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const today = new Date();
     const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
     const [startDate, setStartDate] = useState(currentMonthStart.toISOString().split('T')[0]);
     const [endDate, setEndDate] = useState(today.toISOString().split('T')[0]);
-    const [currentTransformer, setCurrentTransformer] = useState(null);
 
     useEffect(() => {
         if (currentTransformer) {
-            setLoading(true)
+            setLoading(true);
             axios.get(`http://localhost:3000/v1/indexes/${currentTransformer._id}?startDate=${startDate}&endDate=${endDate}`)
                 .then(response => {
                     setData(response.data);
-                    console.log(currentTransformer._id, response.data)
                     setLoading(false);
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
+                    setLoading(false);
                 });
         }
     }, [currentTransformer, startDate, endDate]);
@@ -34,7 +33,7 @@ function Table() {
                     <p>Chọn một trạm...</p>
                 </div>
             </div>
-        )
+        );
     }
 
     if (loading) {
@@ -60,8 +59,8 @@ function Table() {
                         <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
                     </label>
                 </div>
-                <div >
-                    <table className={style}>
+                <div className={style.table} >
+                    <table>
                         <tr>
                             <th>Acetylene</th>
                             <th>CO</th>

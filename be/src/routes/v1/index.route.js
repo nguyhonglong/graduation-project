@@ -9,7 +9,7 @@ const router = express.Router();
 router
   .route('/')
   .get(auth("getIndexes"), indexController.getIndexes)
-  .post(auth("postIndexes"),validate(indexValidation.createIndex), indexController.createIndex);
+  .post(auth("createIndexes"),validate(indexValidation.createIndex), indexController.createIndex);
 
 router
   .route('/:transformerId')

@@ -2,14 +2,10 @@
 
 /* Tree View Styles */
 .transformer {
-    display: flex;
-    flex-direction: column;
     background-color: #f9f9f9;
-    border-radius: 3px;
+    border-radius: 8px;
     padding: 20px;
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 12px;
-    width: 20vw;
-    margin: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
     color: #333;
     
@@ -32,11 +28,7 @@
     align-items: center;
 }
 
-.substationoption::before {
-    content: '▶';
-    margin-right: 10px;
-    transition: transform 0.3s ease;
-}
+
 
 .substationoption.selected::before {
     transform: rotate(90deg);
@@ -46,6 +38,7 @@
 .substationoption.selected {
     background-color: #85b9cc;
     box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
 }
 
 /* Transformer nested within a substation */
@@ -62,14 +55,15 @@
 .substationoption.selected + .transformerlist {
     max-height: 1000px; /* Adjust this value based on your needs */
     transition: max-height 0.5s ease-in;
+    font-weight: bold;
 }
 
 /* Transformer styles */
 .transformeroption {
     font-size: 16px;
-    padding: 8px 16px;
-    background-color: #f1f1f1;
-    border-radius: 5px;
+    padding: 8px 10px;
+    background-color: #f1f3f5;
+    border-radius: 4px;
     margin: 5px 0;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -105,47 +99,76 @@
 
 /* Highlight on hover */
 .transformeroption:hover {
-    background-color: #ddd;
+    background-color: #f0f0f0;
+    cursor: pointer;
 }
 
 /* Indicate active transformer */
 .transformeroption.selected {
-    background-color: #bbb;
+    background-color: #4a90e2;
+    color: white;
     border-color: #999;
 }
 
 /* Show active transformer with border */
 .substationoption.selected + .transformerlist .transformeroption {
     background-color: #eef;
+    font-weight: bold;
 }
 
 .transformeroption + .transformeroption {
     margin-top: 5px;
 }
 
-p {
-    font-size: 16px;
-    color: #e74c3c;
+.searchContainer {
+    position: relative;
+    margin-bottom: 15px;
 }
 
-/* Loading state */
-.loading {
-    font-size: 20px;
-    color: #333;
-    text-align: center;
+.searchIcon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
 }
+
 .searchInput {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 15px; /* Khoảng cách giữa ô tìm kiếm và danh sách */
-    border: 1px solid #ccc; /* Đường viền */
-    border-radius: 5px; /* Bo góc */
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px; /* Đổ bóng nhẹ */
-    font-size: 16px; /* Kích thước chữ */
+    padding: 10px 10px 10px 35px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
 }
 
 .searchInput:focus {
-    outline: none; /* Loại bỏ viền khi ô input được chọn */
-    border-color: #007bff; /* Đổi màu viền khi focus */
+    outline: none;
+    border-color: #4a90e2;
 }
 
+.loading, .error, .noResults {
+    padding: 20px;
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+}
+
+.error {
+    color: #e74c3c;
+}
+
+.noResults {
+    font-style: italic;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.transformerlist {
+    animation: fadeIn 0.3s ease-in-out;
+}

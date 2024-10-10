@@ -10,15 +10,17 @@ table {
     border-radius: 3px;
     width: 60vw;
     height: calc(100vh - 130px);
-    overflow: hidden;
+    overflow: scroll;
+    
 }
 .contentcontainer{
     display: flex;  
-    overflow-y: scroll;
+    overflow: hidden;
+    
 }
 
-table{
-    
+.table{
+    overflow: scroll-y;
 }
 
 th,
@@ -42,4 +44,34 @@ label {
 
 .choosedate{
     padding: 20px;
+}
+
+.tableWrapper {
+    max-height: 400px; /* Adjust this value as needed */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    overflow: scroll-y;
+}
+
+.tableWrapper table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableWrapper thead {
+    position: sticky;
+    top: 0;
+    background-color: #f2f2f2;
+    z-index: 1;
+}
+
+.tableWrapper th,
+.tableWrapper td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tableWrapper tbody tr:hover {
+    background-color: #f5f5f5;
 }

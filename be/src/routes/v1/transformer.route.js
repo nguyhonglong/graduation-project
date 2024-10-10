@@ -9,4 +9,10 @@ router
   .route('/')
   .post(auth("createTransformer"), validate(transformerValidation.createTransformer), transformerController.createTransformer)
   .get(auth("getTransformers"), validate(transformerValidation.getTransformers), transformerController.getTransformer);
+
+
+router
+  .route('/:transformerId')
+  .get(auth("getTransformers"), validate(transformerValidation.getTransformers), transformerController.getTransformerById);
+
 module.exports = router;

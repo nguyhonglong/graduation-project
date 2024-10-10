@@ -16,13 +16,21 @@ const Chart = memo(function Chart({ currentTransformer }) {
         Acetylene: true,
         Ethylene: true,
         Ethane: true,
-        TDCG: true,
-        Water: true
+        Water: true,
+        CO: false,
+        CO2: false,
+        O2: false,
+        TDCG: false
     });
 
     const handleCheckboxChange = (event) => {
         const { name, checked } = event.target;
         setActiveLines(prevState => ({ ...prevState, [name]: checked }));
+    };
+
+    const formatXAxis = (tickItem) => {
+        const date = new Date(tickItem);
+        return `${date.getDate()}/${date.getMonth() + 1}`;
     };
 
     useEffect(() => {
@@ -58,6 +66,9 @@ const Chart = memo(function Chart({ currentTransformer }) {
 
     return (
         <div className={style.chartContainer}>
+            <div className={style.transformername}>
+                <h2>{currentTransformer ? `${currentTransformer.name}` : 'No transformer selected'}</h2>
+            </div>
             <div className={style.choosedate}>
                 <label>
                     Ngày bắt đầu:&nbsp;
@@ -68,9 +79,7 @@ const Chart = memo(function Chart({ currentTransformer }) {
                     <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
                 </label>
             </div>
-            <div className={style.transformername}>
-                {currentTransformer ? `Current Transformer: ${currentTransformer.name}` : 'No transformer selected'}
-            </div>
+            
             <div className={style.chartContent}>
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart
@@ -80,7 +89,7 @@ const Chart = memo(function Chart({ currentTransformer }) {
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="createdAt" />
+                        <XAxis dataKey="createdAt" tickFormatter={formatXAxis} />
                         <YAxis />
                         <Tooltip />
                         <Legend />
@@ -90,6 +99,9 @@ const Chart = memo(function Chart({ currentTransformer }) {
                         {activeLines.Ethylene && <Line type="monotone" dataKey="Ethylene" stroke="#ff7300" />}
                         {activeLines.Ethane && <Line type="monotone" dataKey="Ethane" stroke="#387908" />}
                         {activeLines.TDCG && <Line type="monotone" dataKey="TDCG" stroke="#ff0000" />}
+                        {activeLines.O2 && <Line type="monotone" dataKey="O2" stroke="#8884d8" />}
+                        {activeLines.CO2 && <Line type="monotone" dataKey="CO2" stroke="#8884d8" />}
+                        {activeLines.CO && <Line type="monotone" dataKey="CO" stroke="#8884d8" />}
                         {activeLines.Water && <Line type="monotone" dataKey="Water" stroke="#0000ff" />}
                     </LineChart>
                 </ResponsiveContainer>

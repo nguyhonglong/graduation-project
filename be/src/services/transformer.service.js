@@ -15,13 +15,19 @@ const createTransformer = async (transformerBody) => {
  */
 
 const queryTransformers = async () => {
-  const transformers = await Transformer.find();
+  const transformers = await Transformer.find({}, '_id substation name');
   return transformers;
+};
+
+const queryTransformerById = async (id) => {
+  const transformer = await Transformer.findById(id);
+  return transformer;
 };
 
 
 
 module.exports = {
     createTransformer,
-    queryTransformers
+    queryTransformers,
+    queryTransformerById
 };
