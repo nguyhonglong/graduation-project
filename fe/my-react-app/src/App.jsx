@@ -68,7 +68,7 @@ function AppContent() {
               } />
               <Route path="/dga" element={
                 <ProtectedRoute>
-                  <DGA data={data}/>
+                  <DGA currentTransformer={currentTransformer} />
                 </ProtectedRoute>
               } />
               <Route path="/bieu-do" element={

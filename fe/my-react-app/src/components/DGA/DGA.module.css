@@ -1,0 +1,37 @@
+.dgaContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.datePickerContainer {
+  margin-bottom: 20px;
+}
+
+.datePickerContainer label {
+  margin-right: 10px;
+}
+
+.canvas {
+  border: 1px solid #ccc;
+  background-color: white;
+  margin-bottom: 20px;
+}
+
+.dgaValues {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 600px;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.noTransformer, .loading {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 20px;
+}

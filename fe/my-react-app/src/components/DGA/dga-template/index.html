@@ -1,0 +1,26 @@
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="mysheet.css"/>
+    </head>
+    <body>
+             <canvas id="canvas" width=650 height=580 class="canvas"></canvas>
+             <div class="inputs">
+                <h3 id="head1">  Give the inputs for the gases</h3>
+                <div style="margin:0 0 10px 0;">
+                    <label>CH4 = </label><input style="margin:0 0 0 8px"type="text" id="ch4" name="value1" value=""/> <label>ppm </label><br/>
+                    </div>
+                <div style="margin:0 0 10px 0;">
+                   <label>C2H2 = </label><input type="text" id="c2h2" name="value2" value=""/> <label>ppm </label><br/>
+                    </div>
+                <div>
+                    <label>C2H4 = </label><input type="text" id="c2h4" name="value3" value=""/> <label>ppm </label><br/>
+                    </div>
+                <div>
+                    <button id="bt1" onClick="calcOpr()"> Locate </button>
+                    </div>
+            </div>
+            <script src=duval.js></script>
+            
+    </body>
+</html>

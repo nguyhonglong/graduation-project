@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../AuthContext';
 import style from './UserManagement.module.css';
+import { FaTrash, FaBell, FaBellSlash } from 'react-icons/fa';
 
 function UserManagement() {
   const [users, setUsers] = useState([]);
@@ -23,6 +24,32 @@ function UserManagement() {
     fetchUsers();
   }, [axiosInstance]);
 
+  const deleteUser = async (userId) => {
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      try {
+        await axiosInstance.delete(`/users/${userId}`);
+        setUsers(users.filter(user => user.id !== userId));
+      } catch (err) {
+        setError('Failed to delete user');
+      }
+    }
+  };
+
+  const toggleNotification = async (userId, currentPermission) => {
+    try {
+      await axiosInstance.patch(`/users/${userId}`, {
+        hasNotificationPermission: (!currentPermission).toString()
+      });
+      setUsers(users.map(user =>
+        user.id === userId
+          ? { ...user, hasNotificationPermission: !currentPermission }
+          : user
+      ));
+    } catch (err) {
+      setError('Failed to update notification permission');
+    }
+  };
+
   if (loading) {
     return <div className={style.loading}>Loading users...</div>;
   }
@@ -40,7 +67,8 @@ function UserManagement() {
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
-            <th>Email Verified</th>
+            <th>Notifications</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -49,7 +77,23 @@ function UserManagement() {
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>
-              <td>{user.isEmailVerified ? 'Yes' : 'No'}</td>
+
+              <td>
+                <button
+                  className={style.iconButton}
+                  onClick={() => toggleNotification(user.id, user.hasNotificationPermission)}
+                >
+                  {user.hasNotificationPermission ? <FaBell /> : <FaBellSlash />}
+                </button>
+              </td>
+              <td>
+                <button
+                  className={style.iconButton}
+                  onClick={() => deleteUser(user.id)}
+                >
+                  <FaTrash />
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
