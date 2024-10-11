@@ -18,11 +18,12 @@ function Nav() {
                 <li className={style.link}><Link to="/bang">Xem dữ liệu dạng bảng</Link></li>
                 <li className={style.link}><Link to="/dga">DGA</Link></li>
                 <li className={style.link}><Link to="/tram-bien-ap">Trạm biến áp</Link></li>
+                <li className={style.link}><Link to="/may-bien-ap">Máy biến áp</Link></li>
                 {user && user.role === 'admin' && (
                     <>
-                        <li className={style.link}><Link to="/user-management">Quản lý người dùng</Link></li>
+                        <li className={style.link}><Link to="/quan-ly-nguoi-dung">Quản lý người dùng</Link></li>
                         <li className={style.link}><Link to="/settings">Cài đặt</Link></li>
-                        <li className={style.link}><Link to="/xuat-du-lieu">Xuất/Nhập dữ liệu</Link></li>
+                        <li className={style.link}><Link to="/nhap-xuat-du-lieu">Xuất/Nhập dữ liệu</Link></li>
                         <li className={style.link}><Link to="/phan-tich-nang-cao">Phân tích nâng cao</Link></li>
                     </>
                 )}

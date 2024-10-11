@@ -1,26 +1,26 @@
 /* Container của nav, với chiều dọc chiếm 20% chiều rộng màn hình */
 .container {
     display: flex;
-    flex-direction: column; /* Xếp các phần tử theo chiều dọc */
-    justify-content: space-between; /* Đặt khoảng cách đều giữa các phần tử */
+    flex-direction: column;
+    /* Xếp các phần tử theo chiều dọc */
+    justify-content: space-between;
+    /* Đặt khoảng cách đều giữa các phần tử */
     width: 20vw;
     height: calc(100vh - 130px);
     padding: 20px;
     box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 12px;
     margin: 10px;
     border-radius: 3px;
-    /* background-color: #f8f8f8; */
+    overflow-y: scroll;
+    scrollbar-width: none;
+    /* For Firefox */
+    -ms-overflow-style: none;
+}
 
-    /* display: flex;
-    flex-direction: column;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    margin: 20px auto;
-    font-family: Arial, sans-serif;
-    color: #333; */
+
+.container::-webkit-scrollbar {
+    display: none;
+    /* For Chrome, Safari, and Opera */
 }
 
 /* Định dạng ul để xếp các mục liên kết theo chiều dọc */
@@ -28,7 +28,8 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
-    flex-grow: 1; /* Để danh sách các liên kết chiếm khoảng trống giữa */
+    flex-grow: 1;
+    /* Để danh sách các liên kết chiếm khoảng trống giữa */
 }
 
 /* Định dạng các liên kết bên trong nav theo block để hiện thị dọc */
@@ -56,14 +57,16 @@
 
 /* Khi mục được chọn (active) */
 .active {
-    background-color: #abd4de; /* Màu đỏ EVN cho mục đang chọn */
+    background-color: #abd4de;
+    /* Màu đỏ EVN cho mục đang chọn */
     color: white;
     border-radius: 2px;
 }
 
 /* Định dạng khi di chuột lên mục được chọn */
 .active:hover {
-    background-color: #abd4de; /* Màu đỏ đậm hơn khi hover */
+    background-color: #abd4de;
+    /* Màu đỏ đậm hơn khi hover */
     border-radius: 3px;
 }
 
@@ -79,7 +82,8 @@ button {
     cursor: pointer;
     margin-top: 20px;
     transition: background-color 0.3s ease;
-    align-self: flex-end; /* Đặt nút logout xuống cuối container */
+    align-self: flex-end;
+    /* Đặt nút logout xuống cuối container */
 }
 
 button:hover {

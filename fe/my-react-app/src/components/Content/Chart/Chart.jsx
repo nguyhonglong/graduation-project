@@ -67,7 +67,7 @@ const Chart = memo(function Chart({ currentTransformer }) {
     return (
         <div className={style.chartContainer}>
             <div className={style.transformername}>
-                <h2>{currentTransformer ? `${currentTransformer.name}` : 'No transformer selected'}</h2>
+                <h2>{currentTransformer ? `${currentTransformer.name}` : ''}</h2>
             </div>
             <div className={style.choosedate}>
                 <label>

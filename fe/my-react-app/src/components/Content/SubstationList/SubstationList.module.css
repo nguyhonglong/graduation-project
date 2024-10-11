@@ -1,0 +1,154 @@
+.substationList {
+  padding: 20px;
+  width: 79vw;
+  margin: 0 auto;
+}
+
+.loading, .error {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+.error {
+  color: #ff0000;
+}
+
+.searchContainer {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 10px 10px 35px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.listContainer {
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.substationsList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.substationItem {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.substationItem:last-child {
+  border-bottom: none;
+}
+
+.substationItem:hover {
+  background-color: #f0f0f0;
+}
+
+.transformerStats {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.noResults {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 4px;
+  width: 80%;
+  max-width: 500px;
+}
+
+.modalLoading {
+  text-align: center;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.cancelButton {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.cancelButton:hover {
+  background-color: #d32f2f;
+}
+
+.adminControls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.uploadButton {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.uploadButton:hover {
+  background-color: #45a049;
+}

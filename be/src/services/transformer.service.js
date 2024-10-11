@@ -1,9 +1,9 @@
 const { Transformer } = require('../models');
 
 const createTransformer = async (transformerBody) => {
-    return Transformer.create(transformerBody);
+  const transformer = await Transformer.create(transformerBody);
+  return transformer;
 };
-
 /**
  * Query for transformers
  * @param {Object} filter - Mongo filter
@@ -15,7 +15,7 @@ const createTransformer = async (transformerBody) => {
  */
 
 const queryTransformers = async () => {
-  const transformers = await Transformer.find({}, '_id substation name');
+  const transformers = await Transformer.find({}, '_id substation name serviceState');
   return transformers;
 };
 
@@ -23,6 +23,8 @@ const queryTransformerById = async (id) => {
   const transformer = await Transformer.findById(id);
   return transformer;
 };
+
+
 
 
 
