@@ -19,9 +19,9 @@ const getIndexes = catchAsync(async (req, res) => {
 });
 
 const getIndexesByDays = catchAsync(async (req, res) => {
-  const { startDate, endDate } = req.query;
+  const { date } = req.query;
   const { transformerId } = req.params;
-  const result = await indexService.queryIndexesByDays(transformerId, startDate, endDate);
+  const result = await indexService.queryIndexesByDate(transformerId, date);
   res.send(result);
 });
 

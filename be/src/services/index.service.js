@@ -40,10 +40,34 @@ const queryIndexesByDays = async (transformerId, startDate, endDate) => {
   }
 };
 
+const queryIndexesByDate = async (transformerId, date) => {
+  try {
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const index = await Index.findOne(
+      {
+        transformer: mongoose.Types.ObjectId(transformerId),
+        createdAt: {
+          $gte: startOfDay,
+          $lte: endOfDay
+        }
+      }
+    );
+    return index;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 
 module.exports = {
   createIndex,
   queryIndexes,
   queryIndexesByDays,
-  createIndexes
+  createIndexes,
+  queryIndexesByDate
 };

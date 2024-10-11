@@ -44,6 +44,10 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    hasNotificationPermission: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
