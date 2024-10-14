@@ -223,7 +223,7 @@ var labelfontface = 'verdana';
 var labelpadding = 3;
 var arrowheadLength = 10;
 var arrowheadWidth = 8;
-var arrowhead = document.createElement('canvas');
+var arrowhead = canvas
 premakeArrowhead();
 
 var legendTexts = ['PD = Partial Discharge',
