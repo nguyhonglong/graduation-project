@@ -5,7 +5,7 @@ import {jwtDecode} from 'jwt-decode';
 const API_URL = 'http://localhost:3000/api/v1/';
 
 const getToken = () => {
-  return localStorage.getItem('token');
+  return localStorage.getItem('accessToken');
 };
 
 const isLoggedIn = () => {

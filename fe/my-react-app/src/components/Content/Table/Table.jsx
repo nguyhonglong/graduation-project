@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react"
-import axios from "axios";
 import style from './Table.module.css'
-import Transformer from '../../Transformer/Transformer'
+import { useAuth } from '../../../AuthContext';
+import { FaSpinner } from 'react-icons/fa';
 
 function Table({ currentTransformer }) {
+    const { axiosInstance } = useAuth();
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const today = new Date();
@@ -14,7 +15,7 @@ function Table({ currentTransformer }) {
     useEffect(() => {
         if (currentTransformer) {
             setLoading(true);
-            axios.get(`http://localhost:3000/v1/indexes/${currentTransformer._id}?startDate=${startDate}&endDate=${endDate}`)
+            axiosInstance.get(`/indexes/getIndexesByTransformer/${currentTransformer._id}?startDate=${startDate}&endDate=${endDate}`)
                 .then(response => {
                     setData(response.data);
                     setLoading(false);
@@ -24,13 +25,13 @@ function Table({ currentTransformer }) {
                     setLoading(false);
                 });
         }
-    }, [currentTransformer, startDate, endDate]);
+    }, [currentTransformer, startDate, endDate, axiosInstance]);
 
     if (!currentTransformer) {
         return (
             <div className={style.contentcontainer}>
-                <div className={style.tablecontainer}>
-                    <p>Chọn một trạm...</p>
+                <div className={style.loadingcontainer}>
+                    <p>Chọn một trạm để xem dữ liệu...</p>
                 </div>
             </div>
         );
@@ -38,8 +39,8 @@ function Table({ currentTransformer }) {
 
     if (loading) {
         return <div className={style.contentcontainer}>
-            <div className={style.tablecontainer}>
-                <p>Đang tải dữ liệu...</p>
+            <div className={style.loadingcontainer}>
+            <FaSpinner className={style.spinner} />
             </div>
         </div>
     }

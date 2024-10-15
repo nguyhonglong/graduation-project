@@ -49,7 +49,7 @@ function AppContent() {
     setCurrentTransformer(transformer);
   };
 
-  const showTransformer = ['/bieu-do', '/bang', '/dga'].includes(location.pathname);
+  const showTransformer = ['/bieu-do', '/bang', '/dga', '/nhap-xuat-du-lieu'].includes(location.pathname);
 
   return (
     <div>
@@ -103,7 +103,7 @@ function AppContent() {
               } />
               <Route path="/nhap-xuat-du-lieu" element={
                 <ProtectedRoute requiredRole="admin">
-                  <DataExport />
+                  <DataExport currentTransformer={currentTransformer} />
                 </ProtectedRoute>
               } />
               

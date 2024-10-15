@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import style from './Transformer.module.css';
 import axios from 'axios';
 import { useAuth } from '../../AuthContext';
-import { FaSearch, FaChevronDown, FaChevronRight } from 'react-icons/fa';
+import { FaSearch, FaChevronDown, FaChevronRight, FaSpinner } from 'react-icons/fa';
 
 function Transformer({ setCurrentTransformer, currentTransformer }) {
     const [substations, setSubstations] = useState([]);
@@ -58,7 +58,11 @@ function Transformer({ setCurrentTransformer, currentTransformer }) {
     [transformers, searchTerm]);
 
     if (loading) {
-        return <div className={style.loading}>Đang tải các trạm...</div>;
+        return (
+            <div className={style.loadingContainer}>
+                <FaSpinner className={style.spinner} />
+            </div>
+        );
     }
 
     if (error) {

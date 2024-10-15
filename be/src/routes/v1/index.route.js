@@ -9,11 +9,15 @@ const router = express.Router();
 router
   .route('/')
   .get(auth("getIndexes"), indexController.getIndexes)
-  .post(auth("createIndexes"),validate(indexValidation.createIndex), indexController.createIndex);
+  .post(auth("createIndexes"), validate(indexValidation.createIndex), indexController.createIndex);
 
 router
-  .route('/:transformerId')
-  .get( indexController.getIndexesByDays)
+  .route('/getIndexesByDay/:transformerId')
+  .get(auth("getIndexes"), indexController.getIndexesByDay)
+
+  router
+  .route('/getIndexesByTransformer/:transformerId')
+  .get(auth("getIndexes"), indexController.getIndexesByTransformer);
 
 router
   .route('/createIndexes')

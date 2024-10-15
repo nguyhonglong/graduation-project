@@ -22,12 +22,12 @@ function Nav() {
                 {user && user.role === 'admin' && (
                     <>
                         <li className={style.link}><Link to="/quan-ly-nguoi-dung">Quản lý người dùng</Link></li>
-                        <li className={style.link}><Link to="/settings">Cài đặt</Link></li>
-                        <li className={style.link}><Link to="/nhap-xuat-du-lieu">Xuất/Nhập dữ liệu</Link></li>
+                        
+                        <li className={style.link}><Link to="/nhap-xuat-du-lieu">Xuất dữ liệu</Link></li>
                         <li className={style.link}><Link to="/phan-tich-nang-cao">Phân tích nâng cao</Link></li>
                     </>
                 )}
-                <li className={style.link}><Link to="/update-and-maintainer">Update and maintainer</Link></li>
+                <li className={style.link}><Link to="/update-and-maintainer">Báo lỗi và cập nhật</Link></li>
             </ul>
             <button className={style.logoutButton} onClick={handleLogout}>Đăng xuất</button>
         </nav>

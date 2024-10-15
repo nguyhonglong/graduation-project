@@ -4,33 +4,28 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Chart from 'chart.js/auto';
 import style from './DataExport.module.css';
+import DGA from '../DGA/DGA';
 
-function DataExport() {
-  const [transformers, setTransformers] = useState([]);
-  const [selectedTransformer, setSelectedTransformer] = useState('');
+function DataExport({ currentTransformer }) {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [data, setData] = useState([]);
   const { axiosInstance, user } = useAuth();
-  const chartRef = useRef(null);
-  const [chart, setChart] = useState(null);
+  const chartRef1 = useRef(null);
+  const chartRef2 = useRef(null);
+  const [chart1, setChart1] = useState(null);
+  const [chart2, setChart2] = useState(null);
+  const dgaRef = useRef(null);
 
   useEffect(() => {
-    const fetchTransformers = async () => {
-      try {
-        const response = await axiosInstance.get('/transformers');
-        setTransformers(response.data);
-      } catch (error) {
-        console.error('Error fetching transformers:', error);
-      }
-    };
-    fetchTransformers();
-  }, [axiosInstance]);
+    if (currentTransformer && startDate && endDate) {
+      fetchData();
+    }
+  }, [currentTransformer, startDate, endDate]);
 
   const fetchData = async () => {
-    if (!selectedTransformer || !startDate || !endDate) return;
     try {
-      const response = await axiosInstance.get(`/indexes/${selectedTransformer}`, {
+      const response = await axiosInstance.get(`/indexes/getIndexesByTransformer/${currentTransformer._id}`, {
         params: { startDate, endDate }
       });
       const formattedData = response.data.map(item => {
@@ -54,24 +49,40 @@ function DataExport() {
     doc.setFontSize(12);
     doc.text(`User: ${user.name}`, 10, 10);
     doc.text(`Email: ${user.email}`, 10, 20);
+    doc.text(`Transformer: ${currentTransformer.name}`, 10, 30);
 
-    // Add chart
-    if (chartRef.current && chart) {
-      const chartCanvas = chartRef.current;
+    // Add charts
+    if (chartRef1.current && chart1) {
+      const chartCanvas = chartRef1.current;
       const chartImage = chartCanvas.toDataURL('image/png');
-      doc.addImage(chartImage, 'PNG', 10, 30, 190, 100);
+      doc.addImage(chartImage, 'PNG', 10, 40, 190, 100);
+    }
+
+    if (chartRef2.current && chart2) {
+      const chartCanvas = chartRef2.current;
+      const chartImage = chartCanvas.toDataURL('image/png');
+      doc.addImage(chartImage, 'PNG', 10, 150, 190, 100);
+    }
+
+    // Add DGA chart
+    if (dgaRef.current) {
+      const dgaCanvas = dgaRef.current.querySelector('canvas');
+      const dgaImage = dgaCanvas.toDataURL('image/png');
+      doc.addPage();
+      doc.addImage(dgaImage, 'PNG', 10, 10, 190, 180);
     }
 
     // Add table
     if (data.length > 0) {
+      doc.addPage();
       doc.autoTable({
         head: [Object.keys(data[0])],
         body: data.map(Object.values),
-        startY: 140,
+        startY: 10,
       });
     }
 
-    doc.save('transformer_data.pdf');
+    doc.save(`transformer_${currentTransformer._id}_data.pdf`);
   };
 
   const exportCSV = () => {
@@ -86,7 +97,7 @@ function DataExport() {
     if (link.download !== undefined) {
       const url = URL.createObjectURL(blob);
       link.setAttribute('href', url);
-      link.setAttribute('download', 'transformer_data.csv');
+      link.setAttribute('download', `transformer_${currentTransformer._id}_data.csv`);
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
       link.click();
@@ -95,73 +106,100 @@ function DataExport() {
   };
 
   useEffect(() => {
-    if (data.length > 0 && chartRef.current) {
-      // Destroy existing chart if it exists
-      if (chart) {
-        chart.destroy();
-      }
+    if (data.length > 0 && chartRef1.current && chartRef2.current) {
+      // Destroy existing charts if they exist
+      if (chart1) chart1.destroy();
+      if (chart2) chart2.destroy();
 
-      const ctx = chartRef.current.getContext('2d');
-      const newChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: data.map(item => item.createdAt),
-          datasets: Object.keys(data[0])
-            .filter(key => key !== 'createdAt')
-            .map(key => ({
-              label: key,
-              data: data.map(item => item[key]),
-              borderColor: `#${Math.floor(Math.random()*16777215).toString(16)}`,
-              fill: false
-            }))
-        },
-        options: {
-          responsive: true,
-          title: {
-            display: true,
-            text: 'Transformer Data'
+      const ctx1 = chartRef1.current.getContext('2d');
+      const ctx2 = chartRef2.current.getContext('2d');
+
+      const createChart = (ctx, datasets, title) => {
+        return new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: data.map(item => item.createdAt),
+            datasets: datasets
+          },
+          options: {
+            responsive: true,
+            title: {
+              display: true,
+              text: title
+            }
           }
-        }
-      });
+        });
+      };
 
-      setChart(newChart);
+      const chart1Data = ['TDCG', 'CO2', 'CO', 'O2'].map(key => ({
+        label: key,
+        data: data.map(item => item[key]),
+        borderColor: `#${Math.floor(Math.random()*16777215).toString(16)}`,
+        fill: false
+      }));
+
+      const chart2Data = Object.keys(data[0])
+        .filter(key => !['createdAt', 'TDCG', 'CO2', 'CO', 'O2'].includes(key))
+        .map(key => ({
+          label: key,
+          data: data.map(item => item[key]),
+          borderColor: `#${Math.floor(Math.random()*16777215).toString(16)}`,
+          fill: false
+        }));
+
+      const newChart1 = createChart(ctx1, chart1Data, 'TDCG, CO2, CO, O2');
+      const newChart2 = createChart(ctx2, chart2Data, 'Other Indexes');
+
+      setChart1(newChart1);
+      setChart2(newChart2);
     }
   }, [data]);
 
   return (
     <div className={style.dataExportContainer}>
-      <h1>Export Transformer Data</h1>
-      <div className={style.controls}>
-        <select 
-          value={selectedTransformer} 
-          onChange={(e) => setSelectedTransformer(e.target.value)}
-        >
-          <option value="">Select Transformer</option>
-          {transformers.map(transformer => (
-            <option key={transformer._id} value={transformer._id}>
-              {transformer.name}
-            </option>
-          ))}
-        </select>
-        <input 
-          type="date" 
-          value={startDate} 
-          onChange={(e) => setStartDate(e.target.value)}
-        />
-        <input 
-          type="date" 
-          value={endDate} 
-          onChange={(e) => setEndDate(e.target.value)}
-        />
-        <button onClick={fetchData}>Fetch Data</button>
-      </div>
-      {data.length > 0 && (
-        <div className={style.exportButtons}>
-          <button onClick={exportPDF}>Export PDF</button>
-          <button onClick={exportCSV}>Export CSV</button>
-        </div>
+      <h1 className={style.title}>Export Transformer Data</h1>
+      {currentTransformer ? (
+        <>
+          <div className={style.transformerInfo}>
+            <h2>Selected Transformer: {currentTransformer.name}</h2>
+          </div>
+          <div className={style.controls}>
+            <div className={style.dateControl}>
+              <label htmlFor="startDate">Start Date:</label>
+              <input 
+                id="startDate"
+                type="date" 
+                value={startDate} 
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </div>
+            <div className={style.dateControl}>
+              <label htmlFor="endDate">End Date:</label>
+              <input 
+                id="endDate"
+                type="date" 
+                value={endDate} 
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </div>
+          </div>
+          {data.length > 0 && (
+            <div className={style.exportButtons}>
+              <button className={style.exportButton} onClick={exportPDF}>Export PDF</button>
+              <button className={style.exportButton} onClick={exportCSV}>Export CSV</button>
+            </div>
+          )}
+          <div className={style.chartsContainer}>
+            <canvas ref={chartRef1} />
+            <canvas ref={chartRef2} />
+          </div>
+          <div ref={dgaRef}>
+            <DGA currentTransformer={currentTransformer} />
+          </div>
+        </>
+      ) : (
+        <p className={style.noTransformer}>Please select a transformer to export data.</p>
       )}
-      <canvas ref={chartRef} />
     </div>
   );
 }

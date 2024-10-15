@@ -1,37 +1,71 @@
 .dgaContainer {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: 20px;
   padding: 20px;
+  background-color: rgb(249, 251, 252);
+  width: 55vw;
+
 }
 
-.datePickerContainer {
-  margin-bottom: 20px;
-}
-
-.datePickerContainer label {
-  margin-right: 10px;
+.canvasWrapper {
+  flex: 1 1 650px;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .canvas {
-  border: 1px solid #ccc;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid red;
+}
+
+.controlPanel {
+  flex: 1 1 300px;
+  padding: 20px;
+  border: 2px solid black;
   background-color: white;
+}
+
+.panelTitle {
+  color: #f2f4f7;
+  background-color: rgb(115, 72, 184);
+  padding: 10px;
+  margin: -20px -20px 20px -20px;
+  text-align: center;
+}
+
+.datePickerWrapper {
   margin-bottom: 20px;
 }
 
-.dgaValues {
-  display: flex;
-  justify-content: space-around;
+.datePicker {
   width: 100%;
-  max-width: 600px;
-  background-color: #f0f0f0;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+.indexData {
   margin-top: 20px;
 }
 
-.noTransformer, .loading {
-  text-align: center;
-  font-size: 18px;
+.diagnosisResult {
+  flex-basis: 100%;
   margin-top: 20px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .dgaContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .canvasWrapper, .controlPanel {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
 }

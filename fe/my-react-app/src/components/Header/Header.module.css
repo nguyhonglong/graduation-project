@@ -5,4 +5,36 @@
 
 .bg{
     border: 1px solid rgb(225, 225, 225);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.rightContent {
+    display: flex;
+    align-items: center;
+}
+
+.greeting {
+    margin: 20px;
+    font-weight: bold;
+    width: 200px;
+    writing-mode: horizontal-tb; /* Đảm bảo văn bản hiển thị theo chiều ngang */
+    white-space: nowrap; /* Giữ văn bản trên một dòng */
+}
+
+
+.iconButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    color: #333;
+    margin-left: 15px;
+    transition: color 0.3s ease;
+}
+
+.iconButton:hover {
+    color: #007bff;
 }

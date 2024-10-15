@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import authService from '../../services/authServices';
+import styles from './DGA.module.css';
 
 const DGA = ({ currentTransformer }) => {
   const canvasRef = useRef(null);
-  const [ch4, setCh4] = useState('');
-  const [c2h2, setC2h2] = useState('');
-  const [c2h4, setC2h4] = useState('');
-  const [diagnosisResult, setDiagnosisResult] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [indexData, setIndexData] = useState(null);
+  const [diagnosisResult, setDiagnosisResult] = useState('');
 
   // Define these constants at the component level
   const v0 = { x: 114, y: 366 };
@@ -23,29 +23,90 @@ const DGA = ({ currentTransformer }) => {
   }, []);
 
   useEffect(() => {
-    if (currentTransformer) {
-      fetchData();
+    if (currentTransformer && selectedDate) {
+      fetchIndexData();
     }
   }, [currentTransformer, selectedDate]);
 
-  const fetchData = async () => {
+  const fetchIndexData = async () => {
+    if (!authService.isLoggedIn()) {
+      console.log('Not logged in');
+      return;
+    }
+
     try {
       const formattedDate = selectedDate.toISOString().split('T')[0];
-      const response = await axios.get(`http://localhost:3000/v1/indexes/${currentTransformer.id}?date=${formattedDate}`);
-      const { ch4, c2h2, c2h4 } = response.data;
-      setCh4(ch4.toString());
-      setC2h2(c2h2.toString());
-      setC2h4(c2h4.toString());
+ 
+      const response = await axios.get(
+        `http://localhost:3000/v1/indexes/getIndexesByDay/${currentTransformer._id}?date=${formattedDate}`,
+        {
+          headers: {
+            Authorization: `Bearer ${authService.getToken()}`
+          }
+        }
+      );
+      setIndexData(response.data);
+      // Call calcOpr with the fetched data
+      calcOpr(response.data.Methane, response.data.Ethane, response.data.Ethylene);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching index data:', error);
+      if (error.response && error.response.status === 401) {
+        // Token expired or invalid, handle accordingly (e.g., redirect to login)
+      }
     }
+  };
+
+  const calcOpr = (ch4, c2h2, c2h4) => {
+    console.log(ch4, c2h2, c2h4);
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    const val1 = parseFloat(ch4);
+    const val2 = parseFloat(c2h2);
+    const val3 = parseFloat(c2h4);
+
+    function calcOprByValue(ch4, c2h2, c2h4) {
+      const total = ch4 + c2h2 + c2h4;
+      const ch4_contr = ch4 / total;
+      const c2h2_contr = c2h2 / total;
+      const c2h4_contr = c2h4 / total;
+
+      const c2h2_line = BottomCoordinates(c2h2_contr);
+      const ch4_line = LeftCoordinates(ch4_contr);
+      const c2h4_line = RightCoordinates(c2h4_contr);
+
+      const ch4x = ch4_line.x;
+      const ch4y = ch4_line.y;
+      const c2h4x = c2h4_line.x;
+      const c2h4y = c2h4_line.y;
+      const c2h2x = c2h2_line.x;
+      const c2h2y = c2h2_line.y;
+
+      const ref_ch4 = refLeftCoordinates(ch4_contr);
+      const ref_c2h4 = refRightCoordinates(c2h4_contr);
+
+      const res = checkLineIntersection(
+        ch4_line.x, ch4_line.y, ref_ch4.x, ref_ch4.y,
+        c2h4_line.x, c2h4_line.y, ref_c2h4.x, ref_c2h4.y
+      );
+
+      const color = detectColor(res.x, res.y);
+      const diagResult = findAndDisplayColor(color);
+      setDiagnosisResult(diagResult);
+
+      drawCoordinates(res.x, res.y);
+      drawCords(res.x, res.y, ch4x, ch4y, c2h4x, c2h4y, c2h2x, c2h2y);
+      console.log(val1, val2, val3);
+    }
+
+    calcOprByValue(val1, val2, val3);
   };
 
   const initializeCanvas = (ctx) => {
     var pointSize = 4.5;
     const triangle = [v0, v1, v2];
     ctx.font = '14px arial black';
-    ctx.fillText("Duval's Triangle DGA", 220, 20, 300);
+    
     ctx.fillStyle = 'rgb(255,0,0)';
     ctx.fillRect(50, 454, 20, 10);
     ctx.fillStyle = 'rgb(255,102,153)';
@@ -60,8 +121,8 @@ const DGA = ({ currentTransformer }) => {
     ctx.fillRect(50, 529, 20, 10);
     ctx.fillStyle = 'rgb(153,0,153)';
     ctx.fillRect(50, 544, 20, 10);
-    ctx.fillStyle = "black";
-    ctx.fillText("Diagnosis Result:", 350, 538, 300);
+    // ctx.fillStyle = "black";
+    // // ctx.fillText("Diagnosis Result:", 350, 538, 300);
     var ch4x, ch4y, c2h4x, c2h4y, c2h2x, c2h2y;
     var segments = [{
       points: [{
@@ -469,51 +530,6 @@ const DGA = ({ currentTransformer }) => {
     return { x, y };
   };
 
-  const calcOpr = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-
-    const val1 = parseFloat(ch4);
-    const val2 = parseFloat(c2h2);
-    const val3 = parseFloat(c2h4);
-
-    function calcOprByValue(ch4, c2h2, c2h4) {
-      const total = ch4 + c2h2 + c2h4;
-      const ch4_contr = ch4 / total;
-      const c2h2_contr = c2h2 / total;
-      const c2h4_contr = c2h4 / total;
-
-      const c2h2_line = BottomCoordinates(c2h2_contr);
-      const ch4_line = LeftCoordinates(ch4_contr);
-      const c2h4_line = RightCoordinates(c2h4_contr);
-
-      const ch4x = ch4_line.x;
-      const ch4y = ch4_line.y;
-      const c2h4x = c2h4_line.x;
-      const c2h4y = c2h4_line.y;
-      const c2h2x = c2h2_line.x;
-      const c2h2y = c2h2_line.y;
-
-      const ref_ch4 = refLeftCoordinates(ch4_contr);
-      const ref_c2h4 = refRightCoordinates(c2h4_contr);
-
-      const res = checkLineIntersection(
-        ch4_line.x, ch4_line.y, ref_ch4.x, ref_ch4.y,
-        c2h4_line.x, c2h4_line.y, ref_c2h4.x, ref_c2h4.y
-      );
-
-      const color = detectColor(res.x, res.y);
-      const diagResult = findAndDisplayColor(color);
-      setDiagnosisResult(diagResult);
-
-      drawCoordinates(res.x, res.y);
-      drawCords(res.x, res.y, ch4x, ch4y, c2h4x, c2h4y, c2h2x, c2h2y);
-      console.log(val1, val2, val3);
-    }
-
-    calcOprByValue(val1, val2, val3);
-  };
-
   // Add these functions outside of calcOpr
   const BottomCoordinates = (c2h2_contr) => {
     const dx = (v2.x - v0.x) * c2h2_contr;
@@ -604,10 +620,10 @@ const DGA = ({ currentTransformer }) => {
   };
 
   return (
-    <div style={{ backgroundColor: 'rgb(249, 251, 252)', padding: '10px', margin: '0px' }}>
-      <canvas ref={canvasRef} width={650} height={580} style={{ border: '1px solid red', marginLeft: '380px' }} />
+    <div className={styles.dgaContainer}>
+      <canvas ref={canvasRef} width={580} height={580} style={{ border: '1px solid red'}} />
       <div style={{
-        position: 'absolute',
+        
         top: '200px',
         left: '30px',
         padding: '20px',
@@ -619,7 +635,7 @@ const DGA = ({ currentTransformer }) => {
           backgroundColor: 'rgb(115, 72, 184)',
           borderStyle: 'inset'
         }}>
-          Give the inputs for the gases
+          Select Date
         </h3>
         <div style={{ margin: '0 0 10px 0' }}>
           <label>Date: </label>
@@ -629,53 +645,13 @@ const DGA = ({ currentTransformer }) => {
             dateFormat="yyyy-MM-dd"
           />
         </div>
-        <div style={{ margin: '0 0 10px 0' }}>
-          <label>CH4 = </label>
-          <input
-            style={{ margin: '0 0 0 8px' }}
-            type="text"
-            value={ch4}
-            onChange={(e) => setCh4(e.target.value)}
-          />
-          <label> ppm </label>
-        </div>
-        <div style={{ margin: '0 0 10px 0' }}>
-          <label>C2H2 = </label>
-          <input
-            type="text"
-            value={c2h2}
-            onChange={(e) => setC2h2(e.target.value)}
-          />
-          <label> ppm </label>
-        </div>
-        <div>
-          <label>C2H4 = </label>
-          <input
-            type="text"
-            value={c2h4}
-            onChange={(e) => setC2h4(e.target.value)}
-          />
-          <label> ppm </label>
-        </div>
-        <div>
-          <button
-            onClick={calcOpr}
-            style={{
-              backgroundColor: 'rgb(67, 10, 143)',
-              border: 'none',
-              color: 'white',
-              padding: '15px 32px',
-              textAlign: 'center',
-              textDecoration: 'none',
-              display: 'inline-block',
-              fontSize: '16px',
-              margin: '10px 10px 10px 85px',
-              cursor: 'pointer'
-            }}
-          >
-            Locate
-          </button>
-        </div>
+        {indexData && (
+          <>
+            <div>CH4: {indexData.Methane} ppm</div>
+            <div>C2H2: {indexData.Ethane} ppm</div>
+            <div>C2H4: {indexData.Ethylene} ppm</div>
+          </>
+        )}
       </div>
       {diagnosisResult && (
         <div style={{ marginLeft: '380px', marginTop: '10px' }}>

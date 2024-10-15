@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAuth } from '../../../AuthContext';
 import style from './SubstationList.module.css';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaTimes } from 'react-icons/fa';
 import AddSubstationForm from './AddSubstationForm';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { FaSpinner } from 'react-icons/fa';
 
 function SubstationsList() {
   const [substations, setSubstations] = useState([]);
@@ -16,9 +19,16 @@ function SubstationsList() {
   const { user } = useAuth();
   const [showAddForm, setShowAddForm] = useState(false);
   const [file, setFile] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newSubstation, setNewSubstation] = useState({ substationId: '', name: '' });
 
   const toggleAddForm = () => {
     setShowAddForm(!showAddForm);
+  };
+
+  const toggleAddModal = () => {
+    setShowAddModal(!showAddModal);
+    setNewSubstation({ substationId: '', name: '' });
   };
 
   useEffect(() => {
@@ -60,14 +70,17 @@ function SubstationsList() {
     const substationTransformers = transformers.filter(t => t.substation === substationId);
     const operational = substationTransformers.filter(t => t.serviceState === 'OK').length;
     const errors = substationTransformers.filter(t => t.serviceState === 'ERR').length;
-    return { operational, errors };
+    const total = substationTransformers.length;
+    const operationalPercentage = total > 0 ? (operational / total) * 100 : 0;
+    const errorsPercentage = total > 0 ? (errors / total) * 100 : 0;
+    return { operational, errors, operationalPercentage, errorsPercentage };
   }, [transformers]);
 
-  const filteredSubstations = useMemo(() => 
-    substations.filter((substation) => 
+  const filteredSubstations = useMemo(() =>
+    substations.filter((substation) =>
       substation.name && substation.name.toLowerCase().includes(searchTerm.toLowerCase())
     ),
-  [substations, searchTerm]);
+    [substations, searchTerm]);
 
   const handleFileUpload = async (event) => {
     const uploadedFile = event.target.files[0];
@@ -93,8 +106,47 @@ function SubstationsList() {
     }
   };
 
+  const handleAddSubstation = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosInstance.post('/substations', newSubstation);
+      setSubstations([...substations, response.data]);
+      toggleAddModal();
+      toast.success('Trạm biến áp đã được thêm thành công');
+    } catch (error) {
+      console.error('Error adding substation:', error);
+      toast.error('Không thể thêm trạm biến áp');
+    }
+  };
+
+  const PieChart = ({ operational, errors }) => {
+    const total = operational + errors;
+    const operationalAngle = (operational / total) * 360;
+    const errorsAngle = (errors / total) * 360;
+
+    return (
+      <svg width="24" height="24" viewBox="0 0 24 24" className={style.pieChart}>
+        {total > 0 ? (
+          <>
+            <circle cx="12" cy="12" r="10" fill="#4CAF50" />
+            <path
+              d={`M12 2 A10 10 0 ${errorsAngle > 180 ? 1 : 0} 1 ${
+                12 + 10 * Math.sin(errorsAngle * Math.PI / 180)
+              } ${
+                12 - 10 * Math.cos(errorsAngle * Math.PI / 180)
+              } L 12 12`}
+              fill="#F44336"
+            />
+          </>
+        ) : (
+          <circle cx="12" cy="12" r="10" fill="#ccc" />
+        )}
+      </svg>
+    );
+  };
+
   if (loading) {
-    return <div className={style.loading}>Đang tải danh sách trạm biến áp...</div>;
+    return <div className={style.loading}><FaSpinner className={style.spinner} /></div>;
   }
 
   if (error) {
@@ -103,35 +155,49 @@ function SubstationsList() {
 
   return (
     <div className={style.substationList}>
+      <ToastContainer />
       <h1>Danh sách trạm biến áp</h1>
-      
-      {user && user.role === 'admin' && (
-        <div className={style.adminControls}>
-          <button onClick={toggleAddForm} className={style.addButton}>
-            {showAddForm ? 'Hủy' : 'Thêm trạm biến áp mới'}
-          </button>
-          <input
-            type="file"
-            accept=".csv, .json"
-            onChange={handleFileUpload}
-            style={{ display: 'none' }}
-            id="fileInput"
-          />
-          <label htmlFor="fileInput" className={style.uploadButton}>
-            Upload CSV/JSON
-          </label>
+
+
+
+      {/* Add Substation Modal */}
+      {showAddModal && (
+        <div className={style.modalOverlay} onClick={toggleAddModal}>
+          <div className={style.modal} onClick={(e) => e.stopPropagation()}>
+            <button className={style.closeButton} onClick={toggleAddModal}>
+              <FaTimes />
+            </button>
+            <h2>Thêm trạm biến áp mới</h2>
+            <form onSubmit={handleAddSubstation}>
+              <input
+                type="text"
+                placeholder="Tên trạm biến áp"
+                value={newSubstation.substationId}
+                onChange={(e) => setNewSubstation({ ...newSubstation, substationId: e.target.value })}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Tên Trạm"
+                value={newSubstation.name}
+                onChange={(e) => setNewSubstation({ ...newSubstation, name: e.target.value })}
+                required
+              />
+              <div className={style.modalButtons}>
+                <button type="submit">Thêm</button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
-      {showAddForm && <AddSubstationForm onClose={toggleAddForm} />}
-
       <div className={style.searchContainer}>
         <FaSearch className={style.searchIcon} />
-        <input 
-          type="text" 
-          placeholder="Tìm kiếm trạm biến áp..." 
-          value={searchTerm} 
-          onChange={(e) => setSearchTerm(e.target.value)} 
+        <input
+          type="text"
+          placeholder="Tìm kiếm trạm biến áp..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
           className={style.searchInput}
         />
       </div>
@@ -144,21 +210,46 @@ function SubstationsList() {
             {filteredSubstations.map((substation) => {
               const { operational, errors } = getTransformerStats(substation._id);
               return (
-                <li 
-                  key={substation._id} 
+                <li
+                  key={substation._id}
                   onClick={() => handleSubstationClick(substation._id)}
                   className={style.substationItem}
                 >
                   {substation.name}
-                  <span className={style.transformerStats}>
-                    (OK: {operational}, ERR: {errors})
-                  </span>
+                  <div className={style.transformerStats}>
+                    <PieChart operational={operational} errors={errors} />
+                    <span className={style.statsText}>
+                      (OK: {operational}, ERR: {errors})
+                    </span>
+                  </div>
                 </li>
               );
             })}
           </ul>
         )}
+        
       </div>
+      {user && user.role === 'admin' && (
+        <div className={style.adminControls}>
+          {/* Add a container for the buttons */}
+          <div className={style.buttonContainer}>
+            <button onClick={toggleAddModal} className={style.addButton}>
+              Thêm trạm biến áp mới
+            </button>
+            <input
+              type="file"
+              accept=".csv, .json"
+              onChange={handleFileUpload}
+              style={{ display: 'none' }}
+              id="fileInput"
+            />
+            {/* Change from label to button for consistency */}
+            <button onClick={() => document.getElementById('fileInput').click()} className={style.uploadButton}>
+              Upload CSV/JSON
+            </button>
+          </div>
+        </div>
+      )}
 
       {selectedSubstation && (
         <div className={style.modalOverlay} onClick={handleCloseModal}>
@@ -166,8 +257,7 @@ function SubstationsList() {
             <h2>Chi tiết trạm biến áp</h2>
             {detailsLoading ? (
               <div className={style.modalLoading}>
-                <div className={style.spinner}></div>
-                <p>Đang tải thông tin...</p>
+                <FaSpinner className={style.spinner} />
               </div>
             ) : (
               <>
@@ -182,7 +272,11 @@ function SubstationsList() {
           </div>
         </div>
       )}
+
+      {showAddForm && <AddSubstationForm onClose={toggleAddForm} />}
+
     </div>
+
   );
 }
 

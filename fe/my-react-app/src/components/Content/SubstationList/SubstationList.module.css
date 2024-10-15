@@ -5,9 +5,10 @@
 }
 
 .loading, .error {
-  text-align: center;
-  font-size: 18px;
-  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 130px);
 }
 
 .error {
@@ -39,6 +40,8 @@
   background-color: #f9f9f9;
   border-radius: 4px;
   padding: 10px;
+  height: calc(100vh - 350px);
+  overflow-y: scroll;
 }
 
 .substationsList {
@@ -66,8 +69,9 @@
 }
 
 .transformerStats {
-  font-size: 0.9em;
-  color: #666;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .noResults {
@@ -89,20 +93,65 @@
 }
 
 .modal {
+  position: relative;
   background-color: white;
   padding: 20px;
-  border-radius: 4px;
-  width: 80%;
-  max-width: 500px;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: floatIn 0.3s ease-out;
 }
 
-.modalLoading {
-  text-align: center;
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s;
+  padding: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.closeButton:hover {
+  color: #000;
+}
+
+
+
+.modal h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  padding-right: 30px;
+}
+
+.modal input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modalButtons button {
+  padding: 8px 16px;
 }
 
 .spinner {
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
+  
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -134,21 +183,55 @@
 }
 
 .adminControls {
+  margin-top: 20px;
+}
+
+.buttonContainer {
   display: flex;
+  justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
+}
+
+.addButton,
+.uploadButton {
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.addButton {
+  background-color: #4CAF50;
+  color: white;
 }
 
 .uploadButton {
-  background-color: #4CAF50;
+  background-color: #008CBA;
   color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
 }
 
+.addButton:hover,
 .uploadButton:hover {
-  background-color: #45a049;
+  opacity: 0.8;
+}
+
+.chartContainer {
+  width: 100px;
+  height: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+}
+
+.operationalBar {
+  height: 100%;
+  background-color: #4CAF50;
+}
+
+.errorsBar {
+  height: 100%;
+  background-color: #F44336;
 }

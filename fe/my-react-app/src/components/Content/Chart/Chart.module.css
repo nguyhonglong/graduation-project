@@ -14,6 +14,25 @@ label {
     border: 3px solid #ddd;
 } */
 
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.chartcontainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 .chartContainer {
     display: flex;
@@ -26,6 +45,7 @@ label {
     margin: 10px;
     font-family: Arial, sans-serif;
     height: calc(100vh - 130px);
+    
 }
 
 .checkboxes{

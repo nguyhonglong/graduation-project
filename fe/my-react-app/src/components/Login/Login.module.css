@@ -6,6 +6,7 @@
   background-color: #f0f2f5;
   padding: 20px;
   box-sizing: border-box;
+  width: 100vw;
 }
 
 .loginBox {

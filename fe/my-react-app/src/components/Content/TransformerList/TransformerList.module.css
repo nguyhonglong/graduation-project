@@ -1,9 +1,8 @@
 .transformerList {
   padding: 20px;
-  max-width: 800px;
   margin: 0 auto;
-  width: 79vw;
-  overflow-y: scroll;
+ 
+  
 }
 
 .searchContainer {
@@ -32,6 +31,8 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 10px;
+  overflow-y: scroll;
+  height: calc(100vh - 330px);
 }
 
 .transformersList {
@@ -200,27 +201,40 @@
   }
 }
 
+/* Add this to align buttons horizontally */
 .adminControls {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  align-items: center;
+  justify-content: space-between;
+  justify-content: center; /* To distribute space between buttons */
+  margin:20px
 }
 
-.addButton, .uploadButton {
-  display: flex;
+/* Make buttons the same size */
+.adminButton {
+  display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 8px 16px;
-  background-color: #4CAF50;
+  justify-content: center;
+  flex: 1; /* Ensure equal width */
+  padding: 12px 20px; /* Make padding uniform */
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  transition: background-color 0.3s ease;
+  margin:0px;
 }
 
-.addButton:hover, .uploadButton:hover {
-  background-color: #45a049;
+.adminButton:hover {
+  background-color: #0056b3;
+  
+}
+
+
+input[type="file"] {
+  display: none;
 }
 
 .addForm {
@@ -255,3 +269,34 @@
 .addForm button:hover {
   opacity: 0.8;
 }
+
+.contentRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  width: 70vw;
+}
+
+.chartContainer {
+  width: 30%;
+  min-width: 300px;
+  margin-right: 20px;
+  text-align: center;
+}
+
+.listWrapper {
+  flex-grow: 1;
+  width: 70%;
+}
+
+.searchContainer {
+  margin-bottom: 20px;
+}
+
+.listContainer {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Adjust other existing styles as needed */

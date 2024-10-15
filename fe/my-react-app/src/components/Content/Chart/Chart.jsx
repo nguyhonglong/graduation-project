@@ -1,9 +1,11 @@
 import React, { useState, useEffect, memo } from "react"
-import axios from "axios";
 import style from './Chart.module.css'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useAuth } from '../../../AuthContext';
+import { FaSpinner } from 'react-icons/fa';
 
 const Chart = memo(function Chart({ currentTransformer }) {
+    const { axiosInstance } = useAuth();
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const today = new Date();
@@ -35,8 +37,8 @@ const Chart = memo(function Chart({ currentTransformer }) {
 
     useEffect(() => {
         if (currentTransformer) {
-            setLoading(true)
-            axios.get(`http://localhost:3000/v1/indexes/${currentTransformer._id}?startDate=${startDate}&endDate=${endDate}`)
+            setLoading(true);
+            axiosInstance.get(`/indexes/getIndexesByTransformer/${currentTransformer._id}?startDate=${startDate}&endDate=${endDate}`)
                 .then(response => {
                     setData(response.data);
                     setLoading(false);
@@ -46,12 +48,12 @@ const Chart = memo(function Chart({ currentTransformer }) {
                     setLoading(false);
                 });
         }
-    }, [currentTransformer, startDate, endDate]);
+    }, [currentTransformer, startDate, endDate, axiosInstance]);
 
     if (!currentTransformer) {
         return (
             <div className={style.chartcontainer}>
-                <p>Chọn một trạm...</p>
+                <p>Chọn một trạm để xem dữ liệu...</p>
             </div>
         )
     }
@@ -59,7 +61,7 @@ const Chart = memo(function Chart({ currentTransformer }) {
     if (loading) {
         return (
             <div className={style.chartcontainer}>
-                <p>Đang tải dữ liệu...</p>
+                <FaSpinner className={style.spinner} />
             </div>
         )
     }
@@ -79,7 +81,7 @@ const Chart = memo(function Chart({ currentTransformer }) {
                     <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
                 </label>
             </div>
-            
+
             <div className={style.chartContent}>
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart

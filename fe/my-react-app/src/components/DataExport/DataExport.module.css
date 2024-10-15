@@ -1,42 +1,99 @@
 .dataExportContainer {
   padding: 20px;
-  max-width: 1000px;
-  margin: 0 auto;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 58vw;
+  height: calc(80vh);
+  overflow: scroll;
+  margin :10px;
+}
+
+.dgaContainer {
+  margin: 0;
+}
+
+.title {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.transformerInfo {
+  background-color: #e0e0e0;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.transformerInfo h2 {
+  font-size: 18px;
+  color: #444;
+  margin: 0;
 }
 
 .controls {
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
   margin-bottom: 20px;
 }
 
-.controls select,
-.controls input,
-.controls button {
+.dateControl {
+  display: flex;
+  flex-direction: column;
+}
+
+.dateControl label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.dateControl input {
   padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   font-size: 14px;
 }
 
 .exportButtons {
   display: flex;
-  gap: 10px;
+  justify-content: center;
   margin-bottom: 20px;
 }
 
-.exportButtons button {
-  padding: 8px 16px;
-  font-size: 14px;
+.exportButton {
+  padding: 10px 20px;
+  margin: 0 10px;
   background-color: #4CAF50;
   color: white;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
 }
 
-.exportButtons button:hover {
+.exportButton:hover {
   background-color: #45a049;
 }
 
-canvas {
+.chartsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.chartsContainer canvas {
   max-width: 100%;
-  height: auto;
+  margin-bottom: 20px;
+}
+
+.noTransformer {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+  margin-top: 40px;
 }

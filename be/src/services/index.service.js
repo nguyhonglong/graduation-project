@@ -25,6 +25,7 @@ const queryIndexes = async () => {
 
 const queryIndexesByDays = async (transformerId, startDate, endDate) => {
   try {
+    console.log(startDate, endDate);
     const indexes = await Index.find(
       {
         transformer: mongoose.Types.ObjectId(transformerId),
