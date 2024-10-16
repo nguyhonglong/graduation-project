@@ -1,0 +1,13 @@
+.updateContainer{
+    padding-top: 50px;
+    height: calc(80vh - 100px);
+    text-align: center;
+}
+
+.info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(80vh - 100px);
+}

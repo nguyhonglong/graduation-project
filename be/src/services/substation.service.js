@@ -19,8 +19,14 @@ const querySubstations = async () => {
   return substations;
 };
 
+const querySubstationById = async (substationId) => {
+  const substation = await Substation.findById(substationId);
+  return substation;
+};
+
 
 module.exports = {
     createSubstation,
+    querySubstationById,
     querySubstations
 };

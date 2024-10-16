@@ -7,8 +7,13 @@ import style from './DataExport.module.css';
 import DGA from '../DGA/DGA';
 
 function DataExport({ currentTransformer }) {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(() => {
+    const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    return firstDayOfMonth.toISOString().split('T')[0];
+  });
+  const [endDate, setEndDate] = useState(() => {
+    return new Date().toISOString().split('T')[0];
+  });
   const [data, setData] = useState([]);
   const { axiosInstance, user } = useAuth();
   const chartRef1 = useRef(null);
@@ -157,15 +162,15 @@ function DataExport({ currentTransformer }) {
 
   return (
     <div className={style.dataExportContainer}>
-      <h1 className={style.title}>Export Transformer Data</h1>
+      <h1 className={style.title}>Xuất dữ liệu máy biến áp</h1>
       {currentTransformer ? (
         <>
           <div className={style.transformerInfo}>
-            <h2>Selected Transformer: {currentTransformer.name}</h2>
+            <h2>Máy biến áp đang được chọn: {currentTransformer.name}</h2>
           </div>
           <div className={style.controls}>
             <div className={style.dateControl}>
-              <label htmlFor="startDate">Start Date:</label>
+              <label htmlFor="startDate">Ngày bắt đầu:</label>
               <input 
                 id="startDate"
                 type="date" 
@@ -174,7 +179,7 @@ function DataExport({ currentTransformer }) {
               />
             </div>
             <div className={style.dateControl}>
-              <label htmlFor="endDate">End Date:</label>
+              <label htmlFor="endDate">Ngày kết thúc:</label>
               <input 
                 id="endDate"
                 type="date" 
@@ -185,8 +190,8 @@ function DataExport({ currentTransformer }) {
           </div>
           {data.length > 0 && (
             <div className={style.exportButtons}>
-              <button className={style.exportButton} onClick={exportPDF}>Export PDF</button>
-              <button className={style.exportButton} onClick={exportCSV}>Export CSV</button>
+              <button className={style.exportButton} onClick={exportPDF}>Xuất PDF</button>
+              <button className={style.exportButton} onClick={exportCSV}>Xuất CSV</button>
             </div>
           )}
           <div className={style.chartsContainer}>
@@ -198,7 +203,7 @@ function DataExport({ currentTransformer }) {
           </div>
         </>
       ) : (
-        <p className={style.noTransformer}>Please select a transformer to export data.</p>
+        <p className={style.noTransformer}>Chọn 1 máy biến áp để xem dữ liệu.</p>
       )}
     </div>
   );

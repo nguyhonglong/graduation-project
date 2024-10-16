@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header/Header';
 import Nav from './components/Nav/Nav';
 import Login from './components/Login/Login';
@@ -14,6 +16,8 @@ import SubstationsList from './components/Content/SubstationList/SubstationList'
 import style from './App.module.css';
 import DataExport from './components/DataExport/DataExport';
 import DGA from './components/DGA/DGA';
+import SettingsModal from './components/Header/SettingsModal';
+import Update from './components/Update/Update';
 
 const data = [
   { CH4: 20, C2H4: 50, C2H2: 30 },
@@ -41,9 +45,46 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 };
 
 function AppContent() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, axiosInstance } = useAuth();
   const [currentTransformer, setCurrentTransformer] = React.useState(null);
   const location = useLocation();
+  const [showSettings, setShowSettings] = useState(false);
+  const [settings, setSettings] = useState([]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchSettings();
+    }
+  }, [isAuthenticated, axiosInstance]);
+
+  const fetchSettings = async () => {
+    try {
+      const response = await axiosInstance.get('/settings');
+      setSettings(response.data);
+    } catch (error) {
+      console.error('Failed to fetch settings:', error);
+    }
+  };
+
+  const updateSetting = async (measurementType, highLimit, highHighLimit) => {
+    try {
+      const response = await axiosInstance.put('/settings', {
+        measurementType,
+        highLimit,
+        highHighLimit
+      });
+      const updatedSetting = response.data;
+      setSettings(prevSettings =>
+        prevSettings.map(setting =>
+          setting.measurementType === updatedSetting.measurementType ? updatedSetting : setting
+        )
+      );
+      toast.success('Setting updated successfully');
+    } catch (error) {
+      console.error('Failed to update setting:', error.response?.data?.message || error.message);
+      toast.error('Failed to update setting: ' + (error.response?.data?.message || error.message));
+    }
+  };
 
   const handleSetCurrentTransformer = (transformer) => {
     setCurrentTransformer(transformer);
@@ -54,7 +95,7 @@ function AppContent() {
   return (
     <div>
       <div className={style.appContainer}>
-        {isAuthenticated && <Header />}
+        {isAuthenticated && <Header onOpenSettings={() => setShowSettings(true)} />}
         <div className={style.mainContent}>
           {isAuthenticated && <Nav onLogout={logout} />}
           <div className={style.pageContent}>
@@ -106,6 +147,11 @@ function AppContent() {
                   <DataExport currentTransformer={currentTransformer} />
                 </ProtectedRoute>
               } />
+              <Route path="/update-and-maintainer" element={
+                <ProtectedRoute>
+                  <Update/>
+                </ProtectedRoute>
+              } />
               
             </Routes>
           </div>
@@ -117,6 +163,14 @@ function AppContent() {
           )}
         </div>
       </div>
+      {showSettings && (
+        <SettingsModal
+          settings={settings}
+          onClose={() => setShowSettings(false)}
+          onUpdateSetting={updateSetting}
+        />
+      )}
+      <ToastContainer position="bottom-right" />
     </div>
   );
 }

@@ -1,7 +1,14 @@
 .substationList {
-  padding: 20px;
-  width: 79vw;
+  padding: 30px;
+  width: 75vw;
   margin: 0 auto;
+  padding: 30px;
+  background-color: #FFFFFF;
+ 
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+  height: calc(100vh - 130px);
 }
 
 .loading, .error {

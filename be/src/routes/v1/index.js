@@ -5,6 +5,7 @@ const docsRoute = require('./docs.route');
 const indexRoute = require('./index.route');
 const transformerRoute = require('./transformer.route');
 const substationRoute = require('./substation.route');
+const settingRoute = require('./setting.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -29,7 +30,12 @@ const defaultRoutes = [
   {
     path: '/substations',
     route: substationRoute,
+  },
+  {
+    path: '/settings',
+    route: settingRoute,
   }
+
 ];
 
 const devRoutes = [

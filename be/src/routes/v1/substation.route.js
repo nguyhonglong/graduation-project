@@ -10,5 +10,9 @@ router
   .route('/')
   .get( auth("getSubstations"), validate(substationValidation.getSubstations), substationController.getSubstations)
   .post(auth("createSubstation"), validate(substationValidation.createSubstation), substationController.createSubstation)
+
+router
+  .route('/:substationId')
+  .get(auth("getSubstations"), validate(substationValidation.getSubstations), substationController.getSubstationById)
   
 module.exports = router;

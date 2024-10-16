@@ -5,3 +5,4 @@ module.exports.userService = require('./user.service');
 module.exports.indexService = require('./index.service');
 module.exports.transformerService = require('./transformer.service');
 module.exports.substationService = require('./substation.service');
+module.exports.settingService = require('./setting.service');

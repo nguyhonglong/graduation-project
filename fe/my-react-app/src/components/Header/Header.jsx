@@ -4,7 +4,7 @@ import { FaBell, FaCog } from 'react-icons/fa'
 import logo from '../../assets/Logoevnngangfull.png'
 import style from './Header.module.css'
 
-function Header() {
+function Header({ onOpenSettings }) {
   const { user } = useAuth()
 
   return (
@@ -15,7 +15,7 @@ function Header() {
         <button className={style.iconButton}>
           <FaBell />
         </button>
-        <button className={style.iconButton}>
+        <button className={style.iconButton} onClick={onOpenSettings}>
           <FaCog />
         </button>
       </div>
@@ -23,4 +23,4 @@ function Header() {
   )
 }
 
-export default Header;
+export default Header

@@ -3,3 +3,4 @@ module.exports.userController = require('./user.controller');
 module.exports.authController = require('./transformer.controller');
 module.exports.userController = require('./substation.controller');
 module.exports.authController = require('./index.controller');
+module.exports.settingController = require('./setting.controller');

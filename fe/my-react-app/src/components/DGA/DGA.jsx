@@ -36,7 +36,7 @@ const DGA = ({ currentTransformer }) => {
 
     try {
       const formattedDate = selectedDate.toISOString().split('T')[0];
- 
+
       const response = await axios.get(
         `http://localhost:3000/v1/indexes/getIndexesByDay/${currentTransformer._id}?date=${formattedDate}`,
         {
@@ -106,7 +106,7 @@ const DGA = ({ currentTransformer }) => {
     var pointSize = 4.5;
     const triangle = [v0, v1, v2];
     ctx.font = '14px arial black';
-    
+
     ctx.fillStyle = 'rgb(255,0,0)';
     ctx.fillRect(50, 454, 20, 10);
     ctx.fillStyle = 'rgb(255,102,153)';
@@ -508,25 +508,25 @@ const DGA = ({ currentTransformer }) => {
   const checkLineIntersection = (line1StartX, line1StartY, line1EndX, line1EndY, line2StartX, line2StartY, line2EndX, line2EndY) => {
     // Calculate the denominator
     const denominator = ((line2EndY - line2StartY) * (line1EndX - line1StartX)) - ((line2EndX - line2StartX) * (line1EndY - line1StartY));
-    
+
     // If the denominator is zero, the lines are parallel
     if (denominator === 0) {
       return null;
     }
-    
+
     // Calculate ua and ub
     const ua = (((line2EndX - line2StartX) * (line1StartY - line2StartY)) - ((line2EndY - line2StartY) * (line1StartX - line2StartX))) / denominator;
     const ub = (((line1EndX - line1StartX) * (line1StartY - line2StartY)) - ((line1EndY - line1StartY) * (line1StartX - line2StartX))) / denominator;
-    
+
     // If ua and ub are between 0-1, lines are colliding
     if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
       return null;
     }
-    
+
     // Calculate the intersection point
     const x = line1StartX + (ua * (line1EndX - line1StartX));
     const y = line1StartY + (ua * (line1EndY - line1StartY));
-    
+
     return { x, y };
   };
 
@@ -621,43 +621,37 @@ const DGA = ({ currentTransformer }) => {
 
   return (
     <div className={styles.dgaContainer}>
-      <canvas ref={canvasRef} width={580} height={580} style={{ border: '1px solid red'}} />
-      <div style={{
-        
-        top: '200px',
-        left: '30px',
-        padding: '20px',
-        border: '2px solid black'
-      }}>
-        <h3 style={{
-          color: '#f2f4f7',
-          marginLeft: '15px',
-          backgroundColor: 'rgb(115, 72, 184)',
-          borderStyle: 'inset'
-        }}>
-          Select Date
-        </h3>
-        <div style={{ margin: '0 0 10px 0' }}>
-          <label>Date: </label>
-          <DatePicker
-            selected={selectedDate}
-            onChange={date => setSelectedDate(date)}
-            dateFormat="yyyy-MM-dd"
-          />
+      <h1>Biểu đồ khí hòa tan : {currentTransformer ? currentTransformer.name : 'Chưa chọn máy biến áp'}</h1>
+      <div className={styles.dgaContent}>
+        <canvas ref={canvasRef} width={580} height={580} />
+        <div>
+          <h3>
+            Chọn ngày
+          </h3>
+          <div className={styles.datePickerWrapper}>
+            <label>Ngày đã chọn: </label>
+            <DatePicker
+              selected={selectedDate}
+              onChange={date => setSelectedDate(date)}
+              dateFormat="yyyy-MM-dd"
+            />
+          </div>
+          {indexData && (
+            <>
+              <div>CH4: {indexData.Methane} ppm</div>
+              <div>C2H2: {indexData.Ethane} ppm</div>
+              <div>C2H4: {indexData.Ethylene} ppm</div>
+            </>
+          )}
+          {diagnosisResult && (
+            <div className={styles.diagnosisResult}>
+              <strong>Diagnosis Result:</strong> {diagnosisResult}
+            </div>
+          )}
         </div>
-        {indexData && (
-          <>
-            <div>CH4: {indexData.Methane} ppm</div>
-            <div>C2H2: {indexData.Ethane} ppm</div>
-            <div>C2H4: {indexData.Ethylene} ppm</div>
-          </>
-        )}
       </div>
-      {diagnosisResult && (
-        <div style={{ marginLeft: '380px', marginTop: '10px' }}>
-          <strong>Diagnosis Result:</strong> {diagnosisResult}
-        </div>
-      )}
+
+
     </div>
   );
 };

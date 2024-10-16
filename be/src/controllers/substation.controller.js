@@ -13,8 +13,14 @@ const getSubstations = catchAsync(async (req, res) => {
     res.send(result);
 });
 
+const getSubstationById = catchAsync(async (req, res) => {
+    const substation = await substationService.querySubstationById(req.params.substationId);
+    res.send(substation);
+});
+
 
 module.exports = {
     getSubstations,
-    createSubstation
+    createSubstation,
+    getSubstationById
 };

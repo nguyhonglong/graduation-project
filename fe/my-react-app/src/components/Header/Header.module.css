@@ -31,8 +31,8 @@
     cursor: pointer;
     font-size: 1.2em;
     color: #333;
-    margin-left: 15px;
     transition: color 0.3s ease;
+    margin: 0px;
 }
 
 .iconButton:hover {

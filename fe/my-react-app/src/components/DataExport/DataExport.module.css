@@ -35,13 +35,13 @@
 
 .controls {
   display: flex;
-  justify-content: space-between;
   margin-bottom: 20px;
 }
 
 .dateControl {
   display: flex;
   flex-direction: column;
+  margin-right: 20px;
 }
 
 .dateControl label {
