@@ -88,5 +88,12 @@
     "nodemon": "^2.0.0",
     "prettier": "^2.0.5",
     "supertest": "^6.0.1"
-  }
+  },
+  "builds": [
+    {
+      "src": "src/index.js",
+      "use": "@vercel/node",
+      "config": { "useNpm": true }
+    }
+  ]
 }
