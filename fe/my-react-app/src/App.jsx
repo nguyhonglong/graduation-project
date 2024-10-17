@@ -45,7 +45,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 };
 
 function AppContent() {
-  const { isAuthenticated, logout, axiosInstance } = useAuth();
+  const { isAuthenticated, logout, axiosInstance, loading } = useAuth();
   const [currentTransformer, setCurrentTransformer] = React.useState(null);
   const location = useLocation();
   const [showSettings, setShowSettings] = useState(false);
@@ -92,6 +92,10 @@ function AppContent() {
 
   const showTransformer = ['/bieu-do', '/bang', '/dga', '/nhap-xuat-du-lieu'].includes(location.pathname);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <div className={style.appContainer}>
@@ -101,11 +105,13 @@ function AppContent() {
           <div className={style.pageContent}>
            
             <Routes>
-              <Route path="/login" element={<Login />} />
+              <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
               <Route path="/" element={
-                <ProtectedRoute>
+                isAuthenticated ? (
                   <Chart currentTransformer={currentTransformer} />
-                </ProtectedRoute>
+                ) : (
+                  <Navigate to="/login" />
+                )
               } />
               <Route path="/dga" element={
                 <ProtectedRoute>
