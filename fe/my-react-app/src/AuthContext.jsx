@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await axios.post('http://localhost:3000/v1/auth/login', { email, password });
+            const response = await axios.post('https://graduation-project-be-eight.vercel.app/v1/auth/login', { email, password });
             const { user, tokens } = response.data;
             
             localStorage.setItem('accessToken', tokens.access.token);
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
     const refreshTokens = async () => {
         try {
             const refreshToken = localStorage.getItem('refreshToken');
-            const response = await axios.post('http://localhost:3000/v1/auth/refresh-tokens', { refreshToken });
+            const response = await axios.post('https://graduation-project-be-eight.vercel.app/v1/auth/refresh-tokens', { refreshToken });
             const { access, refresh } = response.data;
             
             localStorage.setItem('accessToken', access.token);
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const axiosInstance = axios.create({
-        baseURL: 'http://localhost:3000/v1',
+        baseURL: 'https://graduation-project-be-eight.vercel.app/v1/',
     });
 
     axiosInstance.interceptors.request.use(

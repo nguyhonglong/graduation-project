@@ -38,7 +38,7 @@ const DGA = ({ currentTransformer }) => {
       const formattedDate = selectedDate.toISOString().split('T')[0];
 
       const response = await axios.get(
-        `http://localhost:3000/v1/indexes/getIndexesByDay/${currentTransformer._id}?date=${formattedDate}`,
+        `https://graduation-project-be-eight.vercel.app/v1/indexes/getIndexesByDay/${currentTransformer._id}?date=${formattedDate}`,
         {
           headers: {
             Authorization: `Bearer ${authService.getToken()}`
