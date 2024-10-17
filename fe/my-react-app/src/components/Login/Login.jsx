@@ -30,7 +30,7 @@ const Login = () => {
         <form onSubmit={handleSubmit} className={style.loginForm}>
           {errorMessage && <p className={style.errorMessage}>{errorMessage}</p>}
           <div className={style.inputGroup}>
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Tài khoản</label>
             <input
               id="email"
               type="email"
