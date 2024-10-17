@@ -26,7 +26,7 @@ const Login = () => {
   return (
     <div className={style.loginContainer}>
       <div className={style.loginBox}>
-        <h2 className={style.loginTitle}>Welcome Back</h2>
+        <h2 className={style.loginTitle}>Chào mừng trở lại</h2>
         <form onSubmit={handleSubmit} className={style.loginForm}>
           {errorMessage && <p className={style.errorMessage}>{errorMessage}</p>}
           <div className={style.inputGroup}>
@@ -36,18 +36,18 @@ const Login = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder="Nhập email"
               required
             />
           </div>
           <div className={style.inputGroup}>
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Mật Khẩu</label>
             <input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              placeholder="Nhập mật khẩu"
               required
             />
           </div>
