@@ -18,11 +18,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors({
-  origin: 'http://localhost:5173', // Địa chỉ của client React
-  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors());
 
 if (config.env !== 'test') {
   app.use(morgan.successHandler);
