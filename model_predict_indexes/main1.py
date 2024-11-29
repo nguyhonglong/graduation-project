@@ -87,7 +87,7 @@ class TimeSeriesTransformer(nn.Module):
             num_layers=num_layers
         )
         
-        # Simpler decoder
+        # decoder
         self.decoder = nn.Sequential(
             nn.Dropout(dropout),
             nn.Linear(d_model, input_dim)
