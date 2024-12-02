@@ -8,7 +8,7 @@
     margin-top: 10px;
     box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 12px;
     font-family: Arial, sans-serif;
-    color: #FFFFFF;
+    /* color: #FFFFFF; */
     height: calc(100vh - 130px);
     overflow-y: scroll;
     width: 19vw;
@@ -40,7 +40,7 @@
     font-size: 18px;
     font-weight: bold;
     background-color: #85b9cc;
-    color: white;
+    color: black;
     padding: 12px 20px;
     margin: 10px 0;
     border-radius: 5px;
@@ -113,6 +113,7 @@
     bottom: 50%;
     width: 1px;
     background-color: #85b9cc;
+    color: black;
 }
 
 .transformeroption:last-child::after {
@@ -128,8 +129,7 @@
 
 /* Indicate active transformer */
 .transformeroption.selected {
-    background-color: #4a90e2;
-    color: white;
+    background-color: #063161;
     border-color: #999;
 }
 
@@ -141,6 +141,7 @@
 
 .transformeroption + .transformeroption {
     margin-top: 5px;
+    color: black;
 }
 
 .searchContainer {

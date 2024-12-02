@@ -1,0 +1,215 @@
+.container {
+  padding: 30px;
+  width: 75vw;
+  background-color: #FFFFFF;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+  height: calc(100vh - 130px);
+  overflow-y: auto;
+  padding-bottom: 60px;
+}
+
+.statsContainer {
+  display: flex;
+  gap: 30px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.statCard {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 24px;
+  flex: 1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+}
+
+.statHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.icon {
+  font-size: 24px;
+  color: #0066cc;
+}
+
+.statHeader h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.statValue {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.number {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #0066cc;
+}
+
+.unit {
+  font-size: 1.5rem;
+  color: #666;
+}
+
+.statDescription {
+  color: #666;
+  font-size: 1rem;
+}
+
+.chartsRow {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.smallChartCard {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  flex: 1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: calc(50% - 15px);
+}
+
+.tableContainer {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tableContainer h2 {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.predictionsTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.predictionsTable th,
+.predictionsTable td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.predictionsTable th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+  color: #333;
+}
+
+.predictionsTable tr:hover {
+  background-color: #f5f5f5;
+}
+
+.predictionsTable td:first-child {
+  font-weight: bold;
+  color: #0066cc;
+}
+
+.warningContainer {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.warningContainer h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.warningIcon {
+  color: #ff9800;
+}
+
+.warningList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.warningCard {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  border-left: 4px solid;
+}
+
+.warningCard.high {
+  border-left-color: #ff9800;
+}
+
+.warningCard.critical {
+  border-left-color: #f44336;
+}
+
+.warningHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.warningTitle {
+  font-weight: bold;
+  color: #333;
+}
+
+.warningParameter {
+  color: #666;
+}
+
+.warningInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.warningRisk {
+  background: #f1f1f1;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #666;
+}
+
+.warningTime {
+  color: #888;
+  font-size: 0.85rem;
+}
+ 

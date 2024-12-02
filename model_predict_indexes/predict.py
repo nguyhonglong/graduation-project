@@ -1,27 +1,44 @@
 import torch
 import pandas as pd
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Security, Depends, status
 from pydantic import BaseModel
-from typing import List, Dict
+from typing import List, Dict, Union
 import numpy as np
 from datetime import datetime, timedelta
 import json
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from sklearn.preprocessing import StandardScaler
 from main1 import TimeSeriesTransformer, load_data
 from contextlib import asynccontextmanager
 import joblib
 from pathlib import Path
+from fastapi.security.api_key import APIKeyHeader, APIKey
+
+# Add API key configuration
+API_KEY = "12345"
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+
+async def get_api_key(api_key_header: str = Security(api_key_header)):
+    if not api_key_header or api_key_header != API_KEY:
+        raise HTTPException(
+            status_code=403,
+            detail="Could not validate API key"
+        )
+    return api_key_header
 
 def load_saved_model(model_path, input_dim=9):
     """Load the saved model and prepare it for inference"""
+    if not Path(model_path).exists():
+        raise FileNotFoundError(f"Model file not found at {model_path}")
+    
     model = TimeSeriesTransformer(input_dim=input_dim)
-    # Load the full checkpoint
-    checkpoint = torch.load(model_path)
-    # Extract just the model state dict
-    model.load_state_dict(checkpoint['model_state_dict'])
-    model.eval()
-    return model
+    try:
+        checkpoint = torch.load(model_path)
+        model.load_state_dict(checkpoint['model_state_dict'])
+        model.eval()
+        return model
+    except Exception as e:
+        raise RuntimeError(f"Error loading model: {str(e)}")
 
 def prepare_scaler(historical_data):
     """Prepare the scaler using historical data"""
@@ -61,7 +78,7 @@ async def lifespan(app: FastAPI):
 # Initialize FastAPI app
 app = FastAPI(
     title="Time Series Prediction API",
-    description="API for predicting gas concentrations for the next 5 days",
+    description="API for predicting heath index and life expectation",
     lifespan=lifespan
 )
 
@@ -142,8 +159,22 @@ class LifeExpectationInput(BaseModel):
     #         }
     #     }
 
-@app.post("/predict/", response_model=PredictionOutput)
-async def predict(input_data: PredictionInput):
+# Define response models for error cases
+class ErrorResponse(BaseModel):
+    detail: str
+
+# Update the endpoint decorators with responses
+@app.post(
+    "/predict/",
+    response_model=PredictionOutput,
+    responses={
+        200: {"description": "Successful prediction", "model": PredictionOutput},
+        400: {"description": "Invalid input data", "model": ErrorResponse},
+        403: {"description": "Invalid API key", "model": ErrorResponse},
+        500: {"description": "Internal server error", "model": ErrorResponse}
+    }
+)
+async def predict(input_data: PredictionInput, api_key: APIKey = Depends(get_api_key)):
     """Endpoint to make predictions for the next 5 days"""
     try:
         # Convert input data to numpy array
@@ -159,7 +190,7 @@ async def predict(input_data: PredictionInput):
         predictions = predict_next_5_days(model, scaler, last_30_days)
         
         # # Create visualization
-        # create_visualization(last_30_days, predictions)
+        create_visualization(last_30_days, predictions)
         
         # Format predictions as list of dictionaries
         predictions_list = []
@@ -177,8 +208,17 @@ async def predict(input_data: PredictionInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/predict_health/", response_model=HealthIndexOutput)
-async def predict_health(input_data: HealthPredictionInput):
+@app.post(
+    "/predict_health/",
+    response_model=HealthIndexOutput,
+    responses={
+        200: {"description": "Successfully predicted health index", "model": HealthIndexOutput},
+        400: {"description": "Invalid input data", "model": ErrorResponse},
+        403: {"description": "Invalid API key", "model": ErrorResponse},
+        500: {"description": "Internal server error", "model": ErrorResponse}
+    }
+)
+async def predict_health(input_data: HealthPredictionInput, api_key: APIKey = Depends(get_api_key)):
     """Endpoint to predict health index from gas concentrations"""
     try:
         # Convert input data to numpy array
@@ -192,14 +232,10 @@ async def predict_health(input_data: HealthPredictionInput):
             input_data.Ethane,
             input_data.Acetylene,
             input_data.H2O
-        ])
-        
-        # Predict health index directly from gas concentrations
-        # Reshape gas data for prediction
-        gas_input = gas_data.reshape(1, -1)
+        ]).reshape(1, -1)
         
         # Predict health index
-        health_prediction = health_model.predict(gas_input)[0]
+        health_prediction = health_model.predict(gas_data)[0]
         
         return HealthIndexOutput(
             health_index=float(health_prediction)
@@ -208,8 +244,17 @@ async def predict_health(input_data: HealthPredictionInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/predict_life_expectation/", response_model=LifeExpectationOutput)
-async def predict_life_expectation(input_data: LifeExpectationInput):
+@app.post(
+    "/predict_life_expectation/",
+    response_model=LifeExpectationOutput,
+    responses={
+        200: {"description": "Successfully predicted life expectation", "model": LifeExpectationOutput},
+        400: {"description": "Invalid input data", "model": ErrorResponse},
+        403: {"description": "Invalid API key", "model": ErrorResponse},
+        500: {"description": "Internal server error", "model": ErrorResponse}
+    }
+)
+async def predict_life_expectation(input_data: LifeExpectationInput, api_key: APIKey = Depends(get_api_key)):
     """Endpoint to predict life expectation from gas concentrations and health index"""
     try:
         # Convert dictionary values to numpy array in correct order
@@ -271,10 +316,48 @@ def create_visualization(historical_data, predictions):
     plt.savefig('predictions_visualization.png')
     plt.close()
 
-@app.get("/visualization")
-async def get_visualization():
+@app.get(
+    "/visualization",
+    responses={
+        200: {"description": "Successfully retrieved visualization", "content": {"image/png": {}}},
+        403: {"description": "Invalid API key", "model": ErrorResponse},
+        404: {"description": "Visualization not found", "model": ErrorResponse},
+        500: {"description": "Internal server error", "model": ErrorResponse}
+    }
+)
+async def get_visualization(api_key: APIKey = Depends(get_api_key)):
     """Endpoint to retrieve the visualization plot"""
-    return FileResponse("predictions_visualization.png")
+    try:
+        file_path = "predictions_visualization.png"
+        if not Path(file_path).exists():
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content={"detail": "Visualization not found. Make a prediction first."}
+            )
+        return FileResponse(file_path)
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"detail": str(e)}
+        )
+
+@app.get(
+    "/health",
+    responses={
+        200: {"description": "API is healthy", "model": dict},
+        403: {"description": "Invalid API key", "model": ErrorResponse},
+        500: {"description": "Internal server error", "model": ErrorResponse}
+    }
+)
+async def health_check(api_key: APIKey = Depends(get_api_key)):
+    """Check if the API is healthy"""
+    try:
+        return {"status": "healthy"}
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"detail": "API health check failed"}
+        )
 
 if __name__ == "__main__":
     import uvicorn

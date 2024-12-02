@@ -18,6 +18,7 @@ import DataExport from './components/DataExport/DataExport';
 import DGA from './components/DGA/DGA';
 import SettingsModal from './components/Header/SettingsModal';
 import Update from './components/Update/Update';
+import AdvancedAnalysis from './components/AdvancedAnalysis/AdvancedAnalysis';
 
 const data = [
   { CH4: 20, C2H4: 50, C2H2: 30 },
@@ -90,7 +91,7 @@ function AppContent() {
     setCurrentTransformer(transformer);
   };
 
-  const showTransformer = ['/bieu-do', '/bang', '/dga', '/nhap-xuat-du-lieu'].includes(location.pathname);
+  const showTransformer = ['/bieu-do', '/bang', '/dga', '/nhap-xuat-du-lieu', '/phan-tich-nang-cao'].includes(location.pathname);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -106,6 +107,11 @@ function AppContent() {
            
             <Routes>
               <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
+              <Route path="/phan-tich-nang-cao" element={
+                <ProtectedRoute>
+                  <AdvancedAnalysis currentTransformer={currentTransformer} />
+                </ProtectedRoute>
+              } />
               <Route path="/" element={
                 isAuthenticated ? (
                   <Chart currentTransformer={currentTransformer} />
