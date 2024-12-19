@@ -16,7 +16,7 @@ function Nav() {
     return (
         <nav className={style.container}>
             <ul className={style.linkul}>
-                <li className={`${style.link} ${isActive('/tong-quan') ? style.active : ''}`}><Link to="/tong-quan">Tổng quan</Link></li>
+                {/* <li className={`${style.link} ${isActive('/') ? style.active : ''}`}><Link to="/">Tổng quan</Link></li> */}
                 <li className={`${style.link} ${isActive('/bieu-do') ? style.active : ''}`}><Link to="/bieu-do">Xem dạng biểu đồ</Link></li>
                 <li className={`${style.link} ${isActive('/bang') ? style.active : ''}`}><Link to="/bang">Xem dữ liệu dạng bảng</Link></li>
                 <li className={`${style.link} ${isActive('/dga') ? style.active : ''}`}><Link to="/dga">DGA</Link></li>

@@ -14,7 +14,9 @@ const indexSchema = mongoose.Schema({
     CO: Number,
     O2:Number,
     Water: Number,
-    TDCG: Number
+    TDCG: Number,
+    health_index: Number,
+    life_expectation: Number,
 }, { timestamps: true });
 
 

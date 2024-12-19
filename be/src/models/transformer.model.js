@@ -25,7 +25,7 @@ const transformerSchema = new mongoose.Schema({
     },
     serviceState: {
         type: String,
-        default: 'OK',
+        default: 'healthy',
     },
     transformerManufacturer: {
         type: String,

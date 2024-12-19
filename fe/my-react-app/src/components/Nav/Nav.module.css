@@ -15,6 +15,7 @@
     scrollbar-width: none;
     /* For Firefox */
     -ms-overflow-style: none;
+    font-size: 20px;
 }
 
 

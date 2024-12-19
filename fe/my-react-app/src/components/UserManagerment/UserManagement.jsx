@@ -71,10 +71,10 @@ function UserManagement() {
       setUsers([...users, response.data]);
       setNewUser({ name: '', email: '', password: '' });
       setShowModal(false);
-      toast.success('User added successfully');
+      toast.success('Người dùng đã được thêm thành công');
     } catch (err) {
-      setError('Failed to add user');
-      toast.error('Failed to add user');
+      setError('Có lỗi xảy ra khi thêm người dùng');
+      toast.error('Có lỗi xảy ra khi thêm người dùng');
     }
   };
 
@@ -89,8 +89,8 @@ function UserManagement() {
       ));
       toast.success(`User role updated to ${newRole} successfully`);
     } catch (err) {
-      setError('Failed to update user role');
-      toast.error('Failed to update user role');
+      setError('Có lỗi xảy ra khi cập nhật vai trò người dùng');
+      toast.error('Có lỗi xảy ra khi cập nhật vai trò người dùng');
     }
   };
 
@@ -118,21 +118,21 @@ function UserManagement() {
               <button
                 className={style.iconButton}
                 onClick={() => toggleNotification(user.id, user.hasNotificationPermission)}
-                title={user.hasNotificationPermission ? "Disable notifications" : "Enable notifications"}
+                title={user.hasNotificationPermission ? "Tắt thông báo cho người dùng này" : "Bật thông báo cho người dùng này"}
               >
                 {user.hasNotificationPermission ? <FaBell /> : <FaBellSlash />}
               </button>
               <button
                 className={style.iconButton}
                 onClick={() => toggleAdminRole(user.id, user.role)}
-                title={user.role === 'admin' ? "Revoke admin role" : "Set as admin"}
+                title={user.role === 'admin' ? "Gỡ bỏ quyền quản trị viên" : "Chỉ định làm quản trị viên"}
               >
                 {user.role === 'admin' ? <FaUserShield /> : <FaUser />}
               </button>
               <button
                 className={style.iconButton}
                 onClick={() => deleteUser(user.id)}
-                title="Delete user"
+                title="Xóa người dùng"
               >
                 <FaTrash />
               </button>
@@ -141,7 +141,7 @@ function UserManagement() {
         ))}
       </ul>
       <button className={style.addButton} onClick={handleAddUserClick}>
-        <FaUserPlus /> Add User
+        <FaUserPlus /> Thêm người dùng mới
       </button>
       
       {showModal && (
@@ -150,11 +150,11 @@ function UserManagement() {
             <button className={style.closeButton} onClick={() => setShowModal(false)}>
               <FaTimes />
             </button>
-            <h2>Add New User</h2>
+            <h2>Thêm người dùng mới</h2>
             <form className={style.addForm} onSubmit={handleAddUser}>
               <input
                 type="text"
-                placeholder="Name"
+                placeholder="Tên người dùng"
                 value={newUser.name}
                 onChange={(e) => setNewUser({...newUser, name: e.target.value})}
                 required
@@ -168,13 +168,13 @@ function UserManagement() {
               />
               <input
                 type="password"
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 value={newUser.password}
                 onChange={(e) => setNewUser({...newUser, password: e.target.value})}
                 required
               />
               <div className={style.modalButtons}>
-                <button type="submit">Add User</button>
+                <button type="submit">Thêm người dùng</button>
               </div>
             </form>
           </div>

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import style from './AdvancedAnalysis.module.css';
-import { FaHeartbeat, FaHourglassHalf, FaExclamationTriangle } from 'react-icons/fa';
+import { FaHeartbeat, FaHourglassHalf, FaExclamationTriangle, FaSpinner } from 'react-icons/fa';
 import { Pie, Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -13,6 +13,7 @@ import {
   LineElement,
   Title,
 } from 'chart.js';
+import { useAuth } from '../../AuthContext';
 
 // Register ChartJS components
 ChartJS.register(
@@ -27,6 +28,49 @@ ChartJS.register(
 );
 
 function AdvancedAnalysis({ currentTransformer }) {
+  const { axiosInstance } = useAuth();
+  const [todayData, setTodayData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [historicalData, setHistoricalData] = useState(null);
+
+  // Fetch today's data
+  useEffect(() => {
+    if (currentTransformer) {
+      // Reset states when transformer changes
+      setTodayData(null);
+      setHistoricalData(null);
+      
+      const today = new Date().toISOString().split('T')[0];
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+      // Get date 30 days ago
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
+
+      setLoading(true);
+
+      // Fetch both current and historical data
+      Promise.all([
+        axiosInstance.get(`/indexes/getIndexesByTransformer/${currentTransformer._id}?startDate=${today}&endDate=${tomorrowStr}`),
+        axiosInstance.get(`/indexes/getIndexesByTransformer/${currentTransformer._id}?startDate=${thirtyDaysAgoStr}&endDate=${today}`)
+      ])
+        .then(([todayResponse, historicalResponse]) => {
+          if (todayResponse.data.length > 0) {
+            setTodayData(todayResponse.data[0]);
+          }
+          setHistoricalData(historicalResponse.data);
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          setLoading(false);
+        });
+    }
+  }, [currentTransformer, axiosInstance]);
+
   // Data for error distribution pie chart
   const errorData = {
     labels: ['Bình thường', 'Rủi ro', 'Nguy hiểm'],
@@ -41,18 +85,17 @@ function AdvancedAnalysis({ currentTransformer }) {
     }],
   };
 
-  // Generate fake health index data for the past month
+  // Generate health data for the past month
   const generateHealthData = () => {
     const dates = [];
     const values = [];
-    const today = new Date();
     
-    for (let i = 30; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      dates.push(date.toLocaleDateString('vi-VN'));
-      // Generate a random value between 88 and 95
-      values.push(92 + (Math.random() * 3 - 1.5));
+    if (historicalData) {
+      historicalData.forEach(record => {
+        const date = new Date(record.timestamp);
+        dates.push(date.toLocaleDateString('vi-VN'));
+        values.push(record.health_index || 0);
+      });
     }
     
     return { dates, values };
@@ -60,14 +103,16 @@ function AdvancedAnalysis({ currentTransformer }) {
 
   const healthData = generateHealthData();
   
+  
   const healthIndexChartData = {
     labels: healthData.dates,
     datasets: [{
       label: 'Chỉ số sức khỏe',
       data: healthData.values,
       borderColor: '#0066cc',
+      backgroundColor: 'rgba(0, 102, 204, 0.2)',
       tension: 0.4,
-      fill: false,
+      fill: true,
     }],
   };
 
@@ -81,7 +126,7 @@ function AdvancedAnalysis({ currentTransformer }) {
     },
     scales: {
       y: {
-        min: 85,
+        min: 0,
         max: 100,
       },
     },
@@ -195,6 +240,14 @@ function AdvancedAnalysis({ currentTransformer }) {
     }
   ];
 
+  if (loading) {
+    return (
+      <div className={style.container}>
+        <FaSpinner className={style.spinner} />
+      </div>
+    );
+  }
+
   if (!currentTransformer) {
     return (
       <div className={style.container}>
@@ -214,7 +267,9 @@ function AdvancedAnalysis({ currentTransformer }) {
             <h2>Chỉ số sức khỏe</h2>
           </div>
           <div className={style.statValue}>
-            <span className={style.number}>92</span>
+            <span className={style.number}>
+              {todayData ? todayData.health_index.toFixed(2) : 'N/A'}
+            </span>
             <span className={style.unit}>%</span>
           </div>
           <div className={style.statDescription}>
@@ -228,7 +283,9 @@ function AdvancedAnalysis({ currentTransformer }) {
             <h2>Tuổi thọ dự kiến</h2>
           </div>
           <div className={style.statValue}>
-            <span className={style.number}>56</span>
+            <span className={style.number}>
+              {todayData ? todayData.life_expectation.toFixed(0) : 'N/A'}
+            </span>
             <span className={style.unit}>năm</span>
           </div>
           <div className={style.statDescription}>
