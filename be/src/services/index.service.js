@@ -27,14 +27,16 @@ const createIndex = async (indexBody) => {
       H2O: indexBody.Water
     };
 
-    const healthResponse = await fetch('http://localhost:8000/predict_health', {
+    const healthResponse = await fetch('http://18.183.119.120/predict_health', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         "X-API-KEY": "12345"
       },
       body: JSON.stringify(requestData)
+
     });
+    console.log(healthResponse);
 
     const healthPrediction = await healthResponse.json();
     // Add health_index to request data for life expectation prediction
@@ -51,7 +53,7 @@ const createIndex = async (indexBody) => {
       Healthy_index: healthPrediction.health_index
     };
 
-    const lifeResponse = await fetch('http://localhost:8000/predict_life_expectation', {
+    const lifeResponse = await fetch('http://18.183.119.120/predict_life_expectation', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -113,17 +115,17 @@ const createIndex = async (indexBody) => {
           to: user.email,
           subject: 'CRITICAL ALERT - Gas Measurements Exceeded Limits',
           text: `Critical alert for transformer ${indexBody.transformer}!\n\n` +
-                `The following measurements have exceeded their high-high limits:\n${criticalDetails}\n\n` +
-                `Health Index: ${healthPrediction.health_index}\n` +
-                `Life Expectation: ${lifePrediction.life_expectation}`
+            `The following measurements have exceeded their high-high limits:\n${criticalDetails}\n\n` +
+            `Health Index: ${healthPrediction.health_index}\n` +
+            `Life Expectation: ${lifePrediction.life_expectation}`
         };
-        
+
         return transporter.sendMail(mailOptions);
       });
 
       await Promise.all(emailPromises);
       console.log("Critical alert emails sent successfully");
-    } 
+    }
 
     return Index.create(indexWithPredictions);
   } catch (error) {

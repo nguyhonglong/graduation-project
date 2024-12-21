@@ -13,6 +13,8 @@ from contextlib import asynccontextmanager
 import joblib
 from pathlib import Path
 from fastapi.security.api_key import APIKeyHeader, APIKey
+import os
+import requests
 
 # Add API key configuration
 API_KEY = "12345"
@@ -46,6 +48,21 @@ def prepare_scaler(historical_data):
     scaler.fit(historical_data)
     return scaler
 
+def download_file(url, local_path):
+    """Download a file from URL and save to local path"""
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        
+        # Create directory if it doesn't exist
+        os.makedirs(os.path.dirname(local_path), exist_ok=True)
+        
+        # Save the file
+        with open(local_path, 'wb') as f:
+            f.write(response.content)
+    except Exception as e:
+        raise RuntimeError(f"Error downloading file from {url}: {str(e)}")
+
 def predict_next_5_days(model, scaler, last_30_days):
     """Make predictions for the next 5 days"""
     with torch.no_grad():
@@ -70,8 +87,34 @@ scaler4 = None  # for life expectation output
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifespan event handler for model initialization"""
-    # Load model and scaler on startup
     global model, scaler, health_model, life_expectation_model, scaler1, scaler2, scaler3, scaler4
+    
+    # Define base URL
+    base_url = "https://datn-nhl.s3.ap-northeast-1.amazonaws.com"
+    
+    # Download all required files with proper folder structure
+    model_files = {
+        'predict/best_model.pth': f"{base_url}/predict/best_model.pth",
+        'health_index/xgboost.joblib': f"{base_url}/health_index/xgboost.joblib",
+        'health_index/scaler1.joblib': f"{base_url}/health_index/scaler1.joblib",
+        'health_index/scaler2.joblib': f"{base_url}/health_index/scaler2.joblib",
+        'life_expectation/xgboost.joblib': f"{base_url}/life_expectation/xgboost.joblib",
+        'life_expectation/scaler1.joblib': f"{base_url}/life_expectation/scaler1.joblib",
+        'life_expectation/scaler2.joblib': f"{base_url}/life_expectation/scaler2.joblib"
+    }
+    
+    # Create directories if they don't exist
+    for directory in ['predict', 'health_index', 'life_expectation']:
+        os.makedirs(directory, exist_ok=True)
+    
+    # Download files from their respective folders
+    for local_path, url in model_files.items():
+        try:
+            download_file(url, local_path)
+        except Exception as e:
+            raise RuntimeError(f"Failed to download {local_path}: {str(e)}")
+    
+    # Load model and scaler on startup
     historical_data = load_data()
     model = load_saved_model('predict/best_model.pth')
     scaler = prepare_scaler(historical_data)
